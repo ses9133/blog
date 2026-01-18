@@ -1,0 +1,73 @@
+{{> layout/header}}
+
+<div class="container p-5 d-flex justify-content-center">
+    <div class="card border-0" style="width: 600px;">
+       <div class="card-header border-bottom-0 text-center fs-4"><b>회원정보</b>
+       </div>
+        <div class="card-body">
+            <div class="text-center mb4">
+                {{#user}}
+                    {{#profileImage}}
+                        <img src="{{profilePath}}" alt="프로필 사진" class="rounded-circle border"
+                             style="width: 150px; height: 150px; object-fit: cover">
+                        <div class="mt-2">
+                            {{#local}}
+                            <form action="/user/profile-image/delete" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('프로필을 삭제하시겠습니까?')">사진 삭제</button>
+                            </form>
+                            {{/local}}
+                        </div>
+                    {{/profileImage}}
+
+                    {{^profileImage}}
+                        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center border"
+                             style="width: 150px; height: 150px;">
+                            <span class="text-white fs-5">프로필 사진 없음</span>
+                        </div>
+                    {{/profileImage}}
+                {{/user}}
+            </div>
+
+            <div class="d-flex flex-column text-center p-2">
+                <div class="mb-3">
+                    <label for="" class="form-label fw-bold">사용자명</label>
+                    <p class="form-control-plaintext">{{user.username}}</p>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label fw-bold">이메일</label>
+                    <p class="form-control-plaintext">{{#user.email}}{{user.email}}{{/user.email}}</p>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label fw-bold">보유 포인트</label>
+                    <p class="form-control-plaintext">
+                        <span class="badge bg-primary fs-6">{{user.point}}P</span>
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label fw-bold text-muted fs-6">가입일 </label>
+                    <p class="form-control-plaintext text-muted">{{user.createdAt}}</p>
+                </div>
+                {{#user.isLocal}}
+                    <a href="/user/update" class="btn btn-dark text-decoration-none fw-bold mb-3 align-self-center rounded-pill">내 정보 수정</a>
+                {{/user.isLocal}}
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
+            <a href="/user/point/charge" class="btn btn-light text-decoration-none text-muted fw-bold">
+                <i class="fa-solid fa-coins"></i>
+                포인트 충전</a>
+            <a href="/user/payment/list" class="btn btn-light text-decoration-none text-muted fw-bold">
+                <i class="fa-solid fa-cash-register"></i>
+                포인트 결제 내역</a>
+            <a href="/user/purchase/list" class="btn btn-light text-decoration-none text-muted fw-bold">
+                <i class="fa-solid fa-bag-shopping"></i>
+                유료 게시글 구매 내역</a>
+            <a href="/boards" class="btn btn-light text-decoration-none text-muted fw-bold">
+                <i class="fa-solid fa-list"></i>
+                목록으로</a>
+        </div>
+    </div>
+
+</div>
+{{> layout/footer}}

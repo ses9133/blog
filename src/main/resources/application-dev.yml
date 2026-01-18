@@ -1,0 +1,88 @@
+server:
+  servlet:
+    encoding:
+      charset: utf-8
+      force: true
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/myblog?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+      username: root
+      password: root
+
+  h2:
+    console:
+      enabled: true
+
+  # 초기 데이터 로딩 설정
+  sql:
+    init:
+      # 2.5 이상 버전부터 명시를 해야 insert 처리 됨
+      mode: always
+      # 애플리케이션 시작시 실행할 SQL 파일 위치
+      data-locations:
+        - classpath:db/data.sql
+
+  # JPA 설정
+  jpa:
+    hibernate:
+      # create: 애플리케이션 시작시 테이블을 새로 생성
+      # 기존 데이터는 모두 삭제됨 (개발용)
+      ddl-auto: create
+    # SQL 쿼리를 콘솔에 출력 (개발용 디버깅)
+#    show-sql: true
+    properties:
+      hibernate:
+        # SQL 쿼리를 보기 좋게 포맷팅
+        format_sql: true
+        # N + 1 문제 해결: LAZY 로딩 시 연관된 엔티티를 배치로 한 번에 가져오기
+        # 게시글 목록 조회 시 만약 username이 필요하다면
+        # 배치로 묶어서 한 번 에 가져옴 (IN 쿼리 사용)
+        default_batch_fetch_size: 100
+    # data.sql 파일을 Hibernate 초기화 이후에 실행
+    defer-datasource-initialization: true
+    # Open Session In View 를 false 로 설정
+    # - true(기본값): 뷰 렌더링까지 세션 유지(LAZY 로딩 가능)
+    # - false: 트랜잭션 종료 시 세션 종료(LAZY 로딩 불가, 명시적 조회 필요(트리거))
+    # - false 설정시 Service 에서 필요한 데이터를 모두 조회하고 DTO로 변환해야함
+    open-in-view: false
+
+oauth:
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID}
+    client-secret: ${KAKAO_CLIENT_SECRET}
+
+social:
+  key: ${SOCIAL_KEY}
+
+portone:
+  imp-key: ${IMP_REST_API_KEY}
+  imp-secret: ${IMP_SECRET_KEY}
