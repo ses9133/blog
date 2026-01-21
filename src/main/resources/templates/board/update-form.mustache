@@ -5,7 +5,7 @@
         <div class="card-header"><b>글수정하기 화면입니다</b></div>
         <div class="card-body">
 
-            <form action="/board/{{board.id}}/update" method="post">
+            <form id="editForm">
 
                 <div class="mb-3">
                     <input type="text" class="form-control"
@@ -23,11 +23,11 @@
                     </div>
                 </div>
 
-                <!-- 수정 완료 버튼: 클릭시 폼 데이터가 POST로 전송됨 -->
-                <button class="btn btn-primary form-control">글수정하기완료</button>
+                <button class="btn btn-primary form-control" id="editBtn" data-board-id="{{board.id}}">글수정하기완료</button>
             </form>
 
         </div>
     </div>
 </div>
+<script src="/js/board/update.js"></script>
 {{> layout/footer}}
