@@ -12,7 +12,6 @@ public class ReplyRequest {
         private Long boardId;
         private String comment;
 
-        // 유효성 검사(형식 검사)
         public void validate() {
             if (comment == null || comment.trim().isEmpty()) {
                 throw new Exception400("댓글 작성은 필수입니다.");
@@ -34,17 +33,4 @@ public class ReplyRequest {
         }
     }
 
-    @Data
-    public static class UpdateDTO {
-        private String comment;
-
-        public void validate() {
-            if (comment == null || comment.trim().isEmpty()) {
-                throw new Exception400("댓글 작성은 필수입니다.");
-            }
-            if (comment.length() > 500) {
-                throw new Exception400("댓글 내용은 500자 이하여야 합니다.");
-            }
-        }
-    }
 }

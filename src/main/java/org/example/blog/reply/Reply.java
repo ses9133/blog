@@ -11,9 +11,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
-/**
- * 단방향
- */
 @Data
 @NoArgsConstructor
 @Table(name = "reply_tb")
@@ -26,7 +23,6 @@ public class Reply {
     @Column(length = 500)
     private String comment;
 
-    // 단방향 설계
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
@@ -45,7 +41,6 @@ public class Reply {
         this.user = user;
     }
 
-    // 소유자 여부 확인
     public boolean isOwner(Long userId) {
         if (userId == null || this.user == null) {
             return false;
@@ -57,16 +52,4 @@ public class Reply {
 
         return replyUserId.equals(userId);
     }
-
-    // 댓글 내용 수정
-    public void updateComment(String newComment) {
-        if (newComment == null || newComment.trim().isEmpty()) {
-            throw new Exception400("댓글 내용 입력은 필수입니다.");
-        }
-        if(newComment.length() > 500) {
-            throw new Exception400("댓글 내용은 최대 500자까지 입니다.");
-        }
-        this.comment = newComment;
-    }
-
 }

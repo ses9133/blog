@@ -8,15 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
-    // 댓글 목록
-    /**
-     * SELECT r.*, b.*, u.*
-     * FROM reply_tb r
-     * INNER JOIN board_tb b ON r.board_id = b.id
-     * INNER JOIN user_tb u ON r.user_id = u.id
-     * WHERE r.board_id = ?
-     * ORDER BY r.created_at ASC
-     * */
 
     @Query("""
         SELECT r
@@ -28,7 +19,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 """)
     List<Reply> findByBoardIdWithUser(@Param("boardId") Long boardId);
 
-    // 댓글 ID로 조회 (작성자 정보도 포함, JOIN FETCH 사용)
     @Query("""
         SELECT r
         FROM Reply r
@@ -39,7 +29,5 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
 """)
     Optional<Reply> findByIdWithUser(@Param("id") Long id);
 
-    // 댓글 삭제 (네임드 쿼리)
-    // 게시글 ID 로 댓글 삭제
     void deleteByBoardId(Long boardId);
 }
