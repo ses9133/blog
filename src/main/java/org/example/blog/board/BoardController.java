@@ -5,12 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.example.blog._core.constants.SessionConstants;
 import org.example.blog._core.response.ApiResponse;
 import org.example.blog.purchase.PurchaseService;
+import org.example.blog.reply.ReplyResponse;
 import org.example.blog.reply.ReplyService;
 import org.example.blog.user.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -45,10 +48,9 @@ public class BoardController {
             isOwner = board.getUserId().equals(sessionUser.getId());
         }
 
-        // TODO - reply 수정 **
-        //List<ReplyResponse.ListDTO> replyList = replyService.댓글목록조회(id, sessionUserId);
+        List<ReplyResponse.ListDTO> replyList = replyService.replyList(id, sessionUserId);
 
-       // model.addAttribute("replyList", replyList);
+        model.addAttribute("replyList", replyList);
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("board", board);
 
