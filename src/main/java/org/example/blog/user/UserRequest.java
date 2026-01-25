@@ -25,8 +25,6 @@ public class UserRequest {
         private String username;
         private String password;
         private String email;
-        // MultipartFile - Spring 에서 파일 업로드를 처리하기 위한 인터페이스
-        // 우리 프로젝트에서는 선택 사항이라 회원가입시 null 또는 empty 상태가 될 수 있음
         private MultipartFile profileImage;
 
         public void validate() {
@@ -44,14 +42,14 @@ public class UserRequest {
             }
         }
 
-        // JoinDTO -> User 타입으로 변환시키는 기능
         public User toEntity(String profileImageFileName) {
             return User.builder()
                     .username(this.username)
                     .password(this.password)
                     .email(this.email)
-                    // DB에는 MultipartFile을 저장할 수 없다(파일 이름만 저장할 예정)
-                    .profileImage(profileImageFileName)
+                    .role(Role.USER)
+                    .provider(OAuthProvider.LOCAL)
+                    .profileImage(profileImageFileName) // DB 에는 MultipartFile 형태가 아닌 문자열의 파일이름 저장
                     .build();
         }
     }
@@ -59,15 +57,14 @@ public class UserRequest {
     @Data
     public static class UpdateDTO {
         private String password;
-        // username 제외
         private MultipartFile profileImage;
-        private String profileImageFileName; // 추후 user update 메서드에서 사용함
+        private String profileImageFileName;
 
         public void validate() {
             if (password == null || password.trim().isEmpty()) {
                 throw new IllegalArgumentException("비밀번호를 입력해주세요");
             }
-            if(password.length() < 4) {
+            if (password.length() < 4) {
                 throw new IllegalArgumentException("비밀번호는 4자리 이상이어야 합니다.");
             }
         }
@@ -79,11 +76,10 @@ public class UserRequest {
         private String code;
 
         public void validate() {
-            if(email == null || email.trim().isEmpty()) {
-                // TODO: Exception400 추후 수정
+            if (email == null || email.trim().isEmpty()) {
                 throw new Exception400("이메일을 입력해주세요");
             }
-            if(!email.contains("@")) {
+            if (!email.contains("@")) {
                 throw new Exception400("올바른 이메일 형식이 아닙니다.");
             }
         }
@@ -94,7 +90,7 @@ public class UserRequest {
         private Integer amount;
 
         public void validate() {
-            if(amount == null || amount <= 0) {
+            if (amount == null || amount <= 0) {
                 throw new Exception400("충전할 포인트는 0보다 커야합니다.");
             }
         }
