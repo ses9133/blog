@@ -86,25 +86,25 @@ public class UserController {
         return "user/update-form";
     }
 
-    @PutMapping("/api/v1/me")
+    @PutMapping( "/api/v1/me")
     @ResponseBody
-    public ResponseEntity<ApiResponse<UserResponse.DetailDTO>> updateProc(@RequestBody UserRequest.UpdateDTO updateDTO, HttpSession session) {
+    public ResponseEntity<ApiResponse<UserResponse.DetailDTO>> updateProc(UserRequest.UpdateDTO updateDTO, HttpSession session) {
         User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
         updateDTO.validate();
-        UserResponse.DetailDTO updatedUser = userService.updateProc(updateDTO, sessionUser.getId());
+        User updatedUser = userService.updateProc(updateDTO, sessionUser.getId());
         session.setAttribute(SessionConstants.LOGIN_USER, updatedUser);
 
-        return ResponseEntity.ok(ApiResponse.ok(updatedUser));
+        return ResponseEntity.ok(ApiResponse.ok(new UserResponse.DetailDTO(updatedUser)));
     }
 
     @DeleteMapping("/api/v1/me/profile-image")
     @ResponseBody
     public ResponseEntity<ApiResponse<UserResponse.DetailDTO>> deleteProfileImage(HttpSession session) {
         User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
-        UserResponse.DetailDTO updatedUser = userService.deleteProfileImage(sessionUser.getId());
-        session.setAttribute(SessionConstants.LOGIN_USER, updatedUser);
+        User updatedUser = userService.deleteProfileImage(sessionUser.getId());
+        session.setAttribute(SessionConstants.LOGIN_USER, sessionUser);
 
-        return ResponseEntity.ok(ApiResponse.ok(updatedUser));
+        return ResponseEntity.ok(ApiResponse.ok(new UserResponse.DetailDTO(updatedUser)));
     }
 
     @GetMapping("/user/kakao")
