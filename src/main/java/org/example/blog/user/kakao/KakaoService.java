@@ -1,6 +1,8 @@
 package org.example.blog.user.kakao;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.blog._core.constants.SessionConstants;
 import org.example.blog._core.errors.exception.Exception401;
 import org.example.blog.user.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -106,6 +108,7 @@ public class KakaoService {
                     .username(usernameFromKakao)
                     .password(passwordEncoder.encode(socialKey))
                     .email(null)
+                    .role(Role.USER)
                     .provider(OAuthProvider.KAKAO)
                     .build();
 

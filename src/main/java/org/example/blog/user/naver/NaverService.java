@@ -106,6 +106,7 @@ public class NaverService {
                     .username(usernameFromNaver)
                     .password(passwordEncoder.encode(socialKey))
                     .email(naverProfile.getResponse().getEmail())
+                    .role(Role.USER)
                     .provider(OAuthProvider.NAVER)
                     .build();
 
