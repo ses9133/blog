@@ -5,9 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 public class UserResponse {
-    /**
-     * 회원 정보 수정 화면 DTO
-     */
     @Data
     public static class UpdateFormDTO {
         private Long id;
@@ -36,10 +33,6 @@ public class UserResponse {
         }
     }
 
-    /**
-     * 로그인 응답 DTO (세션 저장용)
-     * - 세션에 엔티티 정보를 저장하지만 다른 곳으로 전달할 때는 DTO를 사용하는 것이 권장 사항
-     */
     @Data
     public static class LoginDTO {
         private Long id;
@@ -53,9 +46,7 @@ public class UserResponse {
         }
     }
 
-    // JWT DTO 설계
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-    // @JsonNaming: 자바 객체의 필드명 <-> JSON(스네이크 표기법) 자동 변환
     @Data
     public static class OAuthToken {
         private String tokenType;
