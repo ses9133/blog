@@ -42,17 +42,18 @@ public class UserService {
             }
         }
 
-        String hashPwd = passwordEncoder.encode(joinDTO.getPassword());
+//        String hashPwd = passwordEncoder.encode(joinDTO.getPassword());
 
         User user = joinDTO.toEntity(profileImageFileName);
-        user.setPassword(hashPwd);
-
+//        user.setPassword(hashPwd);
+        // TODO - 개발중에만
+        user.setPassword(joinDTO.getPassword());
         userRepository.save(user);
     }
 
     @Transactional
     public User login(UserRequest.LoginDTO loginDTO) {
-        User user = userRepository.findByUsernameWithRoles(loginDTO.getUsername())
+        User user = userRepository.findByUsername(loginDTO.getUsername())
                 .orElse(null);
 
         if (user == null) {
@@ -92,7 +93,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse.DetailDTO updateProc(UserRequest.UpdateDTO updateDTO, Long userId) {
+    public User updateProc(UserRequest.UpdateDTO updateDTO, Long userId) {
         User userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
         if (!userEntity.isOwner(userId)) {
@@ -117,15 +118,17 @@ public class UserService {
         } else {
             updateDTO.setProfileImageFileName(oldProfileImage);
         }
-        String hashPwd = passwordEncoder.encode(updateDTO.getPassword());
-        updateDTO.setPassword(hashPwd);
+//        String hashPwd = passwordEncoder.encode(updateDTO.getPassword());
+//        updateDTO.setPassword(hashPwd);
+        // TODO - 개발시에만
+        updateDTO.setPassword(updateDTO.getPassword());
         userEntity.update(updateDTO);
 
-        return new UserResponse.DetailDTO(userEntity);
+        return userEntity;
     }
 
     @Transactional
-    public UserResponse.DetailDTO deleteProfileImage(Long sessionUserId) {
+    public User deleteProfileImage(Long sessionUserId) {
         User userEntity = userRepository.findById(sessionUserId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 찾을 수 없습니다."));
 
@@ -143,7 +146,7 @@ public class UserService {
         }
         userEntity.setProfileImage(null);
 
-        return new UserResponse.DetailDTO(userEntity);
+        return userEntity;
     }
 
     @Transactional
