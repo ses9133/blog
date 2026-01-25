@@ -1,14 +1,10 @@
 -- User 테이블 데이터 (5명의 사용자)
-INSERT INTO user_tb (username, password, email, created_at) VALUES
-                                                                ('admin', '1234', 'manager@world.com', NOW()),
-                                                                ('traveler', '1234', 'paris@nate.com', NOW()),
-                                                                ('chef_kim', '1234', 'cook@gmail.com', NOW()),
-                                                                ('movie_fan', '1234', 'cinema@naver.com', NOW()),
-                                                                ('health_king', '1234', 'muscle@daum.net', NOW());
--- UserRole 테이블 데이터 (사용자 역할: ADMIN / USER)
-INSERT INTO user_role_tb (role, user_id) VALUES
-                                             ('ADMIN', 1), ('USER', 1),
-                                             ('USER', 2), ('USER', 3), ('USER', 4), ('USER', 5);
+INSERT INTO user_tb (username, password, email, role, created_at) VALUES
+                                                                ('admin', '1234', 'manager@world.com','ADMIN',   NOW()),
+                                                                ('traveler', '1234', 'paris@nate.com', 'USER',  NOW()),
+                                                                ('chef_kim', '1234', 'cook@gmail.com', 'USER', NOW()),
+                                                                ('movie_fan', '1234','cinema@naver.com','USER',   NOW()),
+                                                                ('health_king', '1234', 'muscle@daum.net','USER',   NOW());
 
 -- admin (ID: 1)가 작성한 공지 및 가이드 (3개)
 INSERT INTO board_tb (title, content, user_id, created_at) VALUES
