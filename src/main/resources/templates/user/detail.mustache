@@ -5,16 +5,14 @@
        <div class="card-header border-bottom-0 text-center fs-4"><b>회원정보</b>
        </div>
         <div class="card-body">
-            <div class="text-center mb4">
+            <div class="text-center mb4" id="imageContainer">
                 {{#user}}
                     {{#profileImage}}
                         <img src="{{profilePath}}" alt="프로필 사진" class="rounded-circle border"
-                             style="width: 150px; height: 150px; object-fit: cover">
+                             style="width: 150px; height: 150px; object-fit: cover" id="imageDiv">
                         <div class="mt-2">
                             {{#local}}
-                            <form action="/user/profile-image/delete" method="post" style="display: inline;">
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('프로필을 삭제하시겠습니까?')">사진 삭제</button>
-                            </form>
+                                <button type="button" class="btn btn-sm btn-danger" id="btnDeleteProfile">사진 삭제</button>
                             {{/local}}
                         </div>
                     {{/profileImage}}
@@ -48,7 +46,7 @@
                     <p class="form-control-plaintext text-muted">{{user.createdAt}}</p>
                 </div>
                 {{#user.isLocal}}
-                    <a href="/user/update" class="btn btn-dark text-decoration-none fw-bold mb-3 align-self-center rounded-pill">내 정보 수정</a>
+                    <a href="/me/edit" class="btn btn-dark text-decoration-none fw-bold mb-3 align-self-center rounded-pill">내 정보 수정</a>
                 {{/user.isLocal}}
             </div>
         </div>
@@ -70,4 +68,5 @@
     </div>
 
 </div>
+<script src="/js/user/profile.js"></script>
 {{> layout/footer}}
