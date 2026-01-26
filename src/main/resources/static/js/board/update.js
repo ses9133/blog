@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-   const editBtn = document.getElementById("editBtn");
+   const $editBtn = document.getElementById("editBtn");
 
-   editBtn.addEventListener("click", async () => {
-       const id = editBtn.dataset.boardId;
+   $editBtn.addEventListener("click", async () => {
+       const id = $editBtn.dataset.boardId;
        const data = {
            title: document.querySelector("[name=title]").value,
            content: document.querySelector("[name=content]").value,
