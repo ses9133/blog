@@ -3,6 +3,7 @@ package org.example.blog._core.errors;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.example.blog._core.errors.exception.*;
+import org.example.blog._core.response.ApiResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,76 +13,74 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-// @ControllerAdvice - 모든 컨트롤러에서 발생하는 예외를 이 클래스에서 중앙 집중화 시킴
-// @RestControllerAdvice: @ControllerAdvice + @ResponseBody
 @ControllerAdvice
 @Slf4j
 public class MyExceptionHandler {
 
-    // 내가 지켜볼 예외를 명시해주면 ControllerAdvice가 가지고 와서 처리함
-    @ExceptionHandler(Exception400.class)  // Exception400 예외를 잡음
+    private boolean isApiRequest(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/api");
+    }
+
+    @ExceptionHandler(Exception400.class)
     @ResponseBody
-    public ResponseEntity<String> ex400(Exception400 e, HttpServletRequest request) {
+    public ResponseEntity<?> ex400(Exception400 e, HttpServletRequest request) {
         log.warn("== 400 에러 발생 ==");
-        log.warn("요청 URL: {}", request.getRequestURL()); // 사용자가 던진 URL 확인 가능
+        log.warn("요청 URL: {}", request.getRequestURL());
         log.warn("에러 메시지: {}", e.getMessage());
         log.warn("예외 클래스: {}", e.getClass().getSimpleName());
 
-        // 방어적 코드 추가
-        String message = e.getMessage() != null ? e.getMessage() : "잘못된 요청입니다.";
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.fail(e.getMessage()));
+        }
 
         String script = "<script>" +
-                "alert('" + message + "');" +
+                "alert('" + e.getMessage() + "');" +
                 "history.back();" +
                 "</script>";
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.TEXT_HTML)
                 .body(script);
     }
 
-//    @ExceptionHandler(Exception401.class)
-//    public String ex401(Exception401 e, HttpServletRequest request, Model model) {
-//        log.warn("== 401 에러 발생 ==");
-//        log.warn("요청 URL: {}", request.getRequestURL());
-//        log.warn("에러 메시지: {}", e.getMessage());
-//        log.warn("예외 클래스: {}", e.getClass().getSimpleName());
-//
-////        request.setAttribute("msg", e.getMessage());
-//        model.addAttribute("msg", e.getMessage());
-//
-//        return "err/401";
-//    }
-        @ExceptionHandler(Exception401.class)
-        @ResponseBody
-        public ResponseEntity<String> ex401(Exception401 e) {
-            String script = "<script>" +
-                    "alert('" + e.getMessage() + "');" +
-                    "location.href = '/login'" +
-                    "</script>";
+    @ExceptionHandler(Exception401.class)
+    @ResponseBody
+    public ResponseEntity<?> ex401(Exception401 e, HttpServletRequest request) {
+        log.warn("== 401 에러 발생 ==");
+        log.warn("요청 URL: {}", request.getRequestURL());
+        log.warn("에러 메시지: {}", e.getMessage());
+        log.warn("예외 클래스: {}", e.getClass().getSimpleName());
 
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .contentType(MediaType.TEXT_HTML)
-                    .body(script);
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.fail(e.getMessage()));
         }
 
+        String script = "<script>" +
+                "alert('" + e.getMessage() + "');" +
+                "location.href = '/login'" +
+                "</script>";
 
-
-//    @ExceptionHandler(Exception403.class)
-//    public String ex403(Exception403 e, HttpServletRequest request) {
-//        log.warn("== 403 에러 발생 ==");
-//        log.warn("요청 URL: {}", request.getRequestURL());
-//        log.warn("에러 메시지: {}", e.getMessage());
-//        log.warn("예외 클래스: {}", e.getClass().getSimpleName());
-//
-//        request.setAttribute("msg", e.getMessage());
-//
-//        return "err/403";
-//    }
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
+    }
 
     @ExceptionHandler(Exception403.class)
     @ResponseBody
-    public ResponseEntity<String> ex403(Exception403 e, HttpServletRequest request) {
+    public ResponseEntity<?> ex403(Exception403 e, HttpServletRequest request) {
+        log.warn("== 403 에러 발생 ==");
+        log.warn("요청 URL: {}", request.getRequestURL());
+        log.warn("에러 메시지: {}", e.getMessage());
+        log.warn("예외 클래스: {}", e.getClass().getSimpleName());
+
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponse.fail(e.getMessage()));
+        }
+
         String script = "<script>alert('" + e.getMessage() + "');" +
                 "history.back();" +
                 "</script>";
@@ -92,73 +91,129 @@ public class MyExceptionHandler {
                 .body(script);
     }
 
-    // 템플릿 파일에서 세션 정보와 Request 객체를 바로 접근못하게 막았음(기본값)
-    //
+
     @ExceptionHandler(Exception404.class)
-    public String ex404(Exception404 e, HttpServletRequest request, Model model) {
+    @ResponseBody
+    public ResponseEntity<?> ex404(Exception404 e, HttpServletRequest request) {
         log.warn("== 404 에러 발생 ==");
         log.warn("요청 URL: {}", request.getRequestURL());
         log.warn("에러 메시지: {}", e.getMessage());
         log.warn("예외 클래스: {}", e.getClass().getSimpleName());
 
-//        request.setAttribute("msg", e.getMessage());
-        model.addAttribute("msg", e.getMessage());
-        return "err/404";
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.fail(e.getMessage()));
+        }
+
+        String script = "<script>alert('" + e.getMessage() + "');" +
+                "history.back();" +
+                "</script>";
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
     }
 
     @ExceptionHandler(Exception500.class)
-    public String ex500(Exception500 e, HttpServletRequest request) {
+    @ResponseBody
+    public ResponseEntity<?> ex500(Exception500 e, HttpServletRequest request) {
         log.warn("== 500 에러 발생 ==");
         log.warn("요청 URL: {}", request.getRequestURL());
         log.warn("에러 메시지: {}", e.getMessage());
         log.warn("예외 클래스: {}", e.getClass().getSimpleName());
 
-        request.setAttribute("msg", e.getMessage());
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.fail(e.getMessage()));
+        }
 
-        return "err/500";
+        String script = "<script>alert('" + e.getMessage() + "');" +
+                "history.back();" +
+                "</script>";
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
     }
 
-    // 데이터베이스 제약 조건 위반 예외 처리
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public String handleDataViolationException(DataIntegrityViolationException e, HttpServletRequest request, Model model) {
+    @ResponseBody
+    public ResponseEntity<?> handleDataViolationException(DataIntegrityViolationException e, HttpServletRequest request) {
         log.warn("== 데이터베이스 제약조건 위반 오류 발생 ==");
         log.warn("요청 URL: {}", request.getRequestURL());
         log.warn("에러 메시지: {}", e.getMessage());
         log.warn("예외 클래스: {}", e.getClass().getSimpleName());
 
-        // 외래키 제약조건 위반인 경우
         String errorMessage = e.getMessage();
-        if(errorMessage != null && errorMessage.contains("FOREIGN KEY")) {
-            model.addAttribute("msg", "관련된 데이터가 있어 삭제할 수 없습니다.");
+        String message;
+        if (errorMessage != null && errorMessage.contains("FOREIGN KEY")) {
+            message = "관련된 데이터가 있어 삭제할 수 없습니다.";
         } else {
-            model.addAttribute("msg", "데이터베이스 제약 조건 위반");
+            message = "데이터베이스 제약 조건 위반";
         }
 
-        return "err/500";
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.fail(message));
+        }
+
+        String script = "<script>alert('" + message + "');" +
+                "history.back();" +
+                "</script>";
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
     }
 
-    // 클래스 로딩 오류 처리(NoClassDefFoundException, ClassNotFoundException...)
     @ExceptionHandler(Error.class)
-    public String handleError(Error e, HttpServletRequest request, Model model) {
+    @ResponseBody
+    public ResponseEntity<?> handleError(Error e, HttpServletRequest request) {
         log.warn("== 클래스 로딩 오류 발생 ==");
         log.warn("요청 URL: {}", request.getRequestURL());
         log.warn("에러 메시지: {}", e.getMessage());
         log.warn("예외 클래스: {}", e.getClass().getSimpleName());
 
-        model.addAttribute("msg", "심각한 오류 발생(클래스를 찾을 수 없습니다.)");
-        return "err/500";
+        String message = "시스템내 오류 발생";
+
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.fail(message));
+        }
+
+        String script = "<script>alert('" + message + "');" +
+                "history.back();" +
+                "</script>";
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
     }
 
-    // 기타 모든 실행 시점 오류 처리
     @ExceptionHandler(RuntimeException.class)
-    public String handleRuntimeException(RuntimeException e, HttpServletRequest request) {
+    @ResponseBody
+    public ResponseEntity<?> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
         log.warn("== 예상하지 못한 에러 발생 ==");
         log.warn("요청 URL: {}", request.getRequestURL());
         log.warn("에러 메시지: {}", e.getMessage());
         log.warn("예외 클래스: {}", e.getClass().getSimpleName());
 
-        request.setAttribute("msg", e.getMessage());
+        if (isApiRequest(request)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.fail(e.getMessage()));
+        }
 
-        return "err/500";
+        String script = "<script>alert('" + e.getMessage() + "');" +
+                "history.back();" +
+                "</script>";
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.TEXT_HTML)
+                .body(script);
     }
 }
