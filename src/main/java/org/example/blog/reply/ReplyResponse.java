@@ -1,7 +1,7 @@
 package org.example.blog.reply;
 
 import lombok.Data;
-import org.example.blog._core.utils.MyDateUtil;
+import org.example.blog._core.utils.DateUtil;
 
 public class ReplyResponse {
     @Data
@@ -21,7 +21,7 @@ public class ReplyResponse {
                 this.username = reply.getUser().getUsername();
             }
             if(reply.getCreatedAt() != null) {
-                this.createdAt = MyDateUtil.format(reply.getCreatedAt());
+                this.createdAt = DateUtil.format(reply.getCreatedAt());
             }
             this.isOwner = reply.isOwner(sessionUserId);
         }
