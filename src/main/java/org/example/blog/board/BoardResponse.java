@@ -12,13 +12,12 @@ public class BoardResponse {
     public static class ListDTO {
         private Long id;
         private String title;
-        private String username;  // 작성자명 (평탄화) {{board.username}} 으로 사용 가능
+        private String username;
         private String createdAt;
 
         public ListDTO(Board board) {
             this.id = board.getId();
             this.title = board.getTitle();
-            // 쿼리 --> JOIN FETCH 로 가져오면 문제 없음
             if(board.getUser() != null) {
                 this.username = board.getUser().getUsername();
             }
@@ -37,13 +36,12 @@ public class BoardResponse {
         private String username;
         private String createdAt;
         private Boolean premium;
-        private Boolean isPurchased; // 로그인한 사용자가 해당 글을 구매했는지 (단, 작성자는 제외)
+        private Boolean isPurchased;
 
         public DetailDTO(Board board, Boolean isPurchased) {
             this.id = board.getId();
             this.title = board.getTitle();
             this.content = board.getContent();
-            // JOIN FETCH 활용 (한번에 JOIN 해서 Repository 에서 가져올 예정)
             if(board.getUser() != null) {
                 this.userId = board.getUser().getId();
                 this.username = board.getUser().getUsername();
@@ -55,9 +53,7 @@ public class BoardResponse {
             this.isPurchased = isPurchased != null && isPurchased;
         }
     }
-    /**
-     * 수정화면 응답 DTO
-     * */
+
     @Data
     public static class UpdateFormDTO {
         private Long id;
