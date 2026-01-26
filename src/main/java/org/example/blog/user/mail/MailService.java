@@ -4,7 +4,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.blog._core.errors.exception.Exception500;
-import org.example.blog._core.utils.MailUtils;
+import org.example.blog._core.utils.MailUtil;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class MailService {
 
     public void sendVerificationEmail(String email) {
         // 1. 랜덤코드 생성
-        String code = MailUtils.generateRandomCode();
+        String code = MailUtil.generateRandomCode();
 
         // 2. 이메일 전송 내용 설정
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -52,4 +52,3 @@ public class MailService {
         return false;
     }
 }
-
