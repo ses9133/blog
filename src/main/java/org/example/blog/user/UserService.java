@@ -155,12 +155,4 @@ public class UserService {
         userRepository.save(user);
     }
 
-    @Transactional
-    public User chargePoint(Long userId, Integer amount) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new Exception404("해당 사용자를 조회할 수 없습니다."));
-
-        user.chargePoint(amount);
-        return userRepository.save(user);
-    }
 }
