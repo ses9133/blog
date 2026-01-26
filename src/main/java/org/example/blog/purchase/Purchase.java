@@ -20,13 +20,6 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 public class Purchase {
-    // 1. User
-    // 2. Board
-    // 3. 홍길동 1번 게시글 구매한 기록
-    // 4. 중복 구매 방지
-    // 5. 구매시 지불한 포인트
-    // 6. 구매 시간
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

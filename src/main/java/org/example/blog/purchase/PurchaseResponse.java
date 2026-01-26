@@ -1,7 +1,7 @@
 package org.example.blog.purchase;
 
 import lombok.Data;
-import org.example.blog._core.utils.MyDateUtil;
+import org.example.blog._core.utils.DateUtil;
 
 public class PurchaseResponse {
     @Data
@@ -19,7 +19,7 @@ public class PurchaseResponse {
 
             // 내가 구매한 일시 포맷팅
             if(purchase.getCreatedAt() != null) {
-                this.purchasedAt = MyDateUtil.format(purchase.getCreatedAt());
+                this.purchasedAt = DateUtil.format(purchase.getCreatedAt());
             }
 
             // 평탄화
