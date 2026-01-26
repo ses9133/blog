@@ -82,3 +82,6 @@ social:
 portone:
   imp-key: ${IMP_REST_API_KEY}
   imp-secret: ${IMP_SECRET_KEY}
+
+file:
+  upload-dir: ${user.home}/uploads
