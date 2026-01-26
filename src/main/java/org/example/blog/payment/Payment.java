@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.blog.user.User;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
@@ -17,36 +18,44 @@ public class Payment {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 포트원 결제 고유 번호
     @Column(unique = true, nullable = false)
-    private String impUid;
+    private String paymentId;
 
-    // 우리 서버에서 사용한 고유 주문 번호 (가맹점 주문 번호) - 포트원 입장
-    @Column(unique = true, nullable = false)
-    private String merchantUid;
-
-    // 결제한 사용자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    // 결제 금액
     @Column(nullable = false)
     private Integer amount;
 
-    // 결제 상태(paid - 결제 완료, canceled - 취소됨)
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus = PaymentStatus.READY;
 
     @CreationTimestamp
-    private Timestamp timestamp;
+    @Column(nullable = false)
+    private Timestamp createdAt;
+
+    @UpdateTimestamp
+    private Timestamp updatedAt;
 
     @Builder
-    public Payment(String impUid, String merchantUid, User user, Integer amount, String status) {
-        this.impUid = impUid;
-        this.merchantUid = merchantUid;
+    public Payment(String paymentId, User user, Integer amount, PaymentStatus paymentStatus) {
+        this.paymentId = paymentId;
         this.user = user;
         this.amount = amount;
-        this.status = status;
+        this.paymentStatus = paymentStatus;
+    }
+
+    public void updateStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public boolean isPaid() {
+        return this.getPaymentStatus() == PaymentStatus.PAID;
+    }
+
+    public boolean isReady() {
+        return this.getPaymentStatus() == PaymentStatus.READY;
     }
 }
