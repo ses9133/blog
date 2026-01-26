@@ -1,7 +1,7 @@
 package org.example.blog.board;
 
 import lombok.Data;
-import org.example.blog._core.utils.MyDateUtil;
+import org.example.blog._core.utils.DateUtil;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class BoardResponse {
                 this.username = board.getUser().getUsername();
             }
             if(board.getCreatedAt() != null) {
-                this.createdAt = MyDateUtil.format(board.getCreatedAt());
+                this.createdAt = DateUtil.format(board.getCreatedAt());
             }
         }
     }
@@ -49,7 +49,7 @@ public class BoardResponse {
                 this.username = board.getUser().getUsername();
             }
             if(board.getCreatedAt() != null) {
-                this.createdAt = MyDateUtil.format(board.getCreatedAt());
+                this.createdAt = DateUtil.format(board.getCreatedAt());
             }
             this.premium = board.getPremium() != null && board.getPremium();
             this.isPurchased = isPurchased != null && isPurchased;
