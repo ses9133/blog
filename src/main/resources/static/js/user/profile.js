@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const btnDeleteProfile = document.getElementById("btnDeleteProfile");
-    if(!btnDeleteProfile) return;
+    const $btnDeleteProfile = document.getElementById("btnDeleteProfile");
+    if(!$btnDeleteProfile) return;
 
-    btnDeleteProfile.addEventListener('click', async function () {
+    $btnDeleteProfile.addEventListener('click', async function () {
         if(!confirm("프로필을 삭제하시겠습니까 ?")) return;
 
         try {

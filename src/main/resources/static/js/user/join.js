@@ -1,5 +1,5 @@
 async function callSendApi() {
-    let email = document.querySelector("#email").value;
+    const email = document.querySelector("#email").value;
 
     if(!email) {
         alert("이메일을 입력해주세요");
@@ -27,8 +27,8 @@ async function callSendApi() {
 }
 
 async function callVerifyApi() {
-    let email = document.querySelector("#email").value;
-    let code = document.querySelector("#code").value;
+    const email = document.querySelector("#email").value;
+    const code = document.querySelector("#code").value;
 
     if(!code) {
         alert("인증번호를 입력해주세요");
@@ -47,14 +47,14 @@ async function callVerifyApi() {
             })
         });
 
-        const msgBox = document.querySelector("#msg");
+        const $msgBox = document.querySelector("#msg");
 
         if(response.ok) {
-            msgBox.innerHTML = "<span style='color: green' >인증되었습니다</span>"
+            $msgBox.innerHTML = "<span style='color: green' >인증되었습니다</span>"
             document.querySelector("#isEmailVerified").value = true;
             document.querySelector("#email").readOnly = true;
         } else {
-            msgBox.innerHTML = "<span style='color: red' >인증번호가 틀렸습니다</span>"
+            $msgBox.innerHTML = "<span style='color: red' >인증번호가 틀렸습니다</span>"
             document.querySelector("#isEmailVerified").value = false;
         }
     } catch (e) {

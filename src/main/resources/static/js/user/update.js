@@ -1,6 +1,6 @@
 async function updateUser() {
-    const updateForm = document.querySelector("#updateForm");
-    const formData = new FormData(updateForm);
+    const $updateForm = document.querySelector("#updateForm");
+    const formData = new FormData($updateForm);
 
     try {
         const response = await fetch(`/api/v1/me`, {
