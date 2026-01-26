@@ -4,8 +4,6 @@ import lombok.Data;
 import org.example.blog._core.errors.exception.Exception400;
 
 public class PaymentRequest {
-    // 결제 요청 생성 DTO
-    // 비동기 통신의 body 값과 동일
     @Data
     public static class PrepareDTO {
         private Integer amount; // 충전할 포인트
@@ -27,15 +25,11 @@ public class PaymentRequest {
 
     @Data // 결제 검증 요청 DTO
     public static class verifyDTO {
-        private String impUid; // 포트원 결제 고유 번호
-        private String merchantUid; // 우리 서버(가맹점) 주문 번호
+        private String paymentId;
 
         public void validate() {
-            if(impUid == null || impUid.trim().isEmpty()) {
-                throw new Exception400("결제 고유 번호가 필요합니다.");
-            }
-            if(merchantUid == null || merchantUid.trim().isEmpty()) {
-                throw new Exception400("주문 고유 번호가 필요합니다.");
+            if(paymentId == null || paymentId.trim().isEmpty()) {
+                throw new Exception400("결제 번호(주문 번호)가 필요합니다.");
             }
         }
     }
