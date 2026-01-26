@@ -17,6 +17,7 @@ import java.io.IOException;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
+    private final FileUtil fileUtil;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -36,7 +37,7 @@ public class UserService {
                 if (!FileUtil.isImageFile(joinDTO.getProfileImage())) {
                     throw new Exception400("이미지 파일만 업로드 가능합니다.");
                 }
-                profileImageFileName = FileUtil.saveFile(joinDTO.getProfileImage());
+                profileImageFileName = fileUtil.saveFile(joinDTO.getProfileImage());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -106,11 +107,11 @@ public class UserService {
                 throw new Exception400("이미지 파일만 업로드 가능합니다.");
             }
             try {
-                String newProfileImageName = FileUtil.saveFile(updateDTO.getProfileImage());
+                String newProfileImageName = fileUtil.saveFile(updateDTO.getProfileImage());
                 updateDTO.setProfileImageFileName(newProfileImageName);
 
                 if(oldProfileImage != null && !oldProfileImage.isEmpty()) {
-                    FileUtil.deleteFile(oldProfileImage);
+                    fileUtil.deleteFile(oldProfileImage);
                 }
             } catch (IOException e) {
                 throw new Exception500("파일 저장에 실패했습니다.");
@@ -139,7 +140,7 @@ public class UserService {
         String profileImage = userEntity.getProfileImage();
         if (profileImage != null && !profileImage.isEmpty()) {
             try {
-                FileUtil.deleteFile(profileImage);
+                fileUtil.deleteFile(profileImage);
             } catch (IOException e) {
                 throw new Exception500("파일 삭제에 실패했습니다.");
             }
@@ -154,14 +155,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // TODO ***
     @Transactional
-    public User 포인트충전(Long userId, Integer amount) {
-        // 1.  사용자 조회
+    public User chargePoint(Long userId, Integer amount) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception404("해당 사용자를 조회할 수 없습니다."));
 
-        // 2. 포인트 충전
         user.chargePoint(amount);
         return userRepository.save(user);
     }
