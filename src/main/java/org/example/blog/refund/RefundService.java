@@ -8,6 +8,7 @@ import org.example.blog._core.errors.exception.Exception500;
 import org.example.blog.payment.Payment;
 import org.example.blog.payment.PaymentRepository;
 import org.example.blog.payment.PaymentResponse;
+import org.example.blog.payment.PaymentStatus;
 import org.example.blog.user.User;
 import org.example.blog.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,7 +49,7 @@ public class RefundService {
         }
 
         // 3. 결제 완료 상태 인지 확인("paid", "canceled" 가 있는데 paid 일 때만 폼 보여줄 수 있음)
-        if(!"paid".equals(payment.getStatus())) {
+        if(!"paid".equals(payment.getPaymentStatus())) {
             throw new Exception400("결제 완료된 상태만 환불 요청 가능합니다.");
         }
 
@@ -127,23 +128,23 @@ public class RefundService {
 
         // 포트원 액세스 토큰 발급 요청(포트원 인증 서버)
         // 포트원 자원 서버에서 refund row update 요청(결제 취소)
-        포트원결제취소(payment.getImpUid(), payment.getAmount());
+        포트원결제취소(payment.getPaymentId(), payment.getAmount());
 
         refundRequest.setStatus(RefundStatus.APPROVED);
-        payment.setStatus("cancelled");
+        payment.setPaymentStatus(PaymentStatus.CANCELLED);
         // 내 포인트 잔액을 환불한 금액 만큼 차감해야함
         user.deductPoint(refundAmount);
     }
 
     private void 포트원결제취소(String impUid, Integer amount) {
         //1 . 액세스 토큰 발급
-        String accessToken = 포트원액세스토큰발급();
-        System.out.println("=== 취소용 accessToken: " + accessToken);
+//        String accessToken = 포트원액세스토큰발급();
+//        System.out.println("=== 취소용 accessToken: " + accessToken);
 
         // 2. 요청 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessToken);
+//        headers.setBearerAuth(accessToken);
 
         // 3. 요청 바디 생성
         Map<String, Object> body = new HashMap<>();
@@ -188,39 +189,5 @@ public class RefundService {
         }
     }
 
-    private String 포트원액세스토큰발급() {
-        try {
-            // https://api.iamport.kr/users/getToken
-            RestTemplate restTemplate = new RestTemplate();
 
-            // HTTP 메세지 헤더 생성
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            // HTTP 메세지 바디 생성
-            Map<String, String> body = new HashMap<>();
-            // 포트원에서 발급 받았던 REST API KEY
-            body.put("imp_key", impKey);
-            body.put("imp_secret", impSecret);
-
-            // 헤더 + body 결합
-            HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
-
-            // 통신 요청
-            ResponseEntity<PaymentResponse.PortOneTokenResponse> response = restTemplate.exchange(
-                    "https://api.iamport.kr/users/getToken",
-                    HttpMethod.POST,
-                    request,
-                    PaymentResponse.PortOneTokenResponse.class
-            );
-            System.out.println("액세스 토큰 확인 ");
-            System.out.println(response.getBody().getResponse().getAccessToken());
-            System.out.println("response : " + response);
-
-            // 응답받은 액세스토큰 리턴
-            return response.getBody().getResponse().getAccessToken();
-        } catch (Exception e) {
-            throw new Exception400("포트원 인증실패: 관리자 설정을 확인하세요");
-        }
-    }
 }

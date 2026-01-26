@@ -1,7 +1,7 @@
 package org.example.blog.refund;
 
 import lombok.Data;
-import org.example.blog._core.utils.MyDateUtil;
+import org.example.blog._core.utils.DateUtil;
 
 public class RefundResponse {
     @Data
@@ -54,11 +54,10 @@ public class RefundResponse {
             this.id = refundRequest.getId();
             this.username = refundRequest.getUser().getUsername();
             this.paymentId = refundRequest.getPayment().getId();
-            this.impUid = refundRequest.getPayment().getImpUid();
-            this.merchantUid = refundRequest.getPayment().getMerchantUid();
+            this.merchantUid = refundRequest.getPayment().getPaymentId();
             this.amount = refundRequest.getPayment().getAmount();
             if(refundRequest.getCreatedAt() != null) {
-                this.requestedAt = MyDateUtil.format(refundRequest.getCreatedAt());
+                this.requestedAt = DateUtil.format(refundRequest.getCreatedAt());
             }
             this.status = refundRequest.getStatus();
             switch (refundRequest.getStatus()) {
