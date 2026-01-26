@@ -2,7 +2,7 @@ package org.example.blog._core.utils;
 
 import java.util.Random;
 
-public class MailUtils {
+public class MailUtil {
     public static String generateRandomCode() {
         Random random = new Random();
 
