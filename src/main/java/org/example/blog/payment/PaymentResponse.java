@@ -64,21 +64,21 @@ public class PaymentResponse {
             this.paymentStatus = payment.getPaymentStatus();
             this.isRefundable = isRefundable != null ? isRefundable : false;
 
-            // 상태 표시명 변환
-            if (paymentStatus == PaymentStatus.PAID) {
+            if (payment.isPaid()) {
                 this.statusDisplay = "결제완료";
-            } else {
+            } else if(payment.isCancelled()) {
                 this.statusDisplay = "환불완료";
+            } else {
+                this.statusDisplay = "결제대기";
             }
 
-            // 날자 포멧팅
             if (payment.getCreatedAt() != null) {
                 this.paidAt = DateUtil.format(payment.getCreatedAt());
             }
         }
 
         public ListDTO(Payment payment) {
-            this(payment, payment.getPaymentStatus() == PaymentStatus.PAID);
+            this(payment, payment.isPaid());
         }
     }
 }
