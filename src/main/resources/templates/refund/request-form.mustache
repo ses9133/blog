@@ -1,19 +1,19 @@
 {{> layout/header}}
 
-<div class="container p-5">
-    <!--  외부 카드  -->
+<div class="container p-5" style="max-width: 600px;">
+
     <div class="card">
         <div class="card-header mb-0">
             <h4><b>환불 요청</b></h4>
         </div>
 
         <div class="card-body">
-            <form action="/refund/request" method="post">
+            <form action="/refunds" method="post">
                 <input type="hidden" name="paymentId" value="{{payment.id}}">
                 <div class="mb-3">
                     <label class="form-label">결제 정보</label>
                     <div class="bg-light p-3 rounded-3">
-                        <p class="mb-1"><strong>결제 번호</strong>: {{payment.id}}</p>
+                        <p class="mb-1"><strong>결제 번호</strong>: {{payment.paymentId}}</p>
                         <p class="mb-1"><strong>결제 금액</strong>: {{payment.amount}} P</p>
                         <p class="mb-1"><strong>결제일</strong>: {{payment.paidAt}}</p>
                     </div>
@@ -24,15 +24,12 @@
                     <div class="form-text">최대 500자까지 입력 가능합니다.</div>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <a href="/user/payment/list" class="btn btn-secondary">취소</a>
-                    <button type="submit" class="btn btn-primary">환불 요청하기</button>
+                    <a href="/me/payments" class="btn btn-secondary">취소</a>
+                    <button type="submit" class="btn btn-primary" onclick="confirm('환불을 진행하시겠습니까?')">환불 요청하기</button>
                 </div>
             </form>
         </div>
 
     </div>
 </div>
-
-
-
 {{> layout/footer}}
