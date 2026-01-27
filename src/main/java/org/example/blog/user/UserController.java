@@ -150,20 +150,19 @@ public class UserController {
         model.addAttribute("user", sessionUser);
         return "user/charge-point";
     }
-
-    // ==================
-    // TODO - 구매 부분 리팩토링 예정
-    @GetMapping("/user/payment/list")
+    
+    @GetMapping("/me/payments")
     public String paymentList(Model model, HttpSession session) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
         List<PaymentResponse.ListDTO> paymentList = paymentService.paymentList(sessionUser.getId());
         model.addAttribute("paymentList", paymentList);
         return "user/payment-list";
     }
 
-    @GetMapping("/user/purchase/list")
+    // TODO - purchase 관련 리팩토링
+    @GetMapping("/me/purchases")
     public String purchaseList(Model model, HttpSession session) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
+        User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
         List<PurchaseResponse.ListDTO> purchaseList = purchaseService.구매내역조회(sessionUser.getId());
 
         model.addAttribute("purchaseList", purchaseList);
