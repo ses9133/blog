@@ -39,7 +39,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/replies/**",
                         "/logout",
                         "/admin/**",
-                        "/me/**"
+                        "/me/**",
+                        "/refunds/**"
                 )
                 .excludePathPatterns(
                         "/login/**",
