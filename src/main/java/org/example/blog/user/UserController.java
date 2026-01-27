@@ -150,7 +150,7 @@ public class UserController {
         model.addAttribute("user", sessionUser);
         return "user/charge-point";
     }
-    
+
     @GetMapping("/me/payments")
     public String paymentList(Model model, HttpSession session) {
         User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
