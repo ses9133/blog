@@ -3,9 +3,9 @@ package org.example.blog.refund;
 import lombok.Data;
 import org.example.blog._core.errors.exception.Exception400;
 
-public class RefundRequestDTO {
+public class RefundRequest {
     @Data
-    public static class RequestDTO {
+    public static class DTO {
         private Long paymentId;
         private String reason;
 
