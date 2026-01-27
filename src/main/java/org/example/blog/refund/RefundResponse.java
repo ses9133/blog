@@ -1,26 +1,27 @@
 package org.example.blog.refund;
 
 import lombok.Data;
+import lombok.Getter;
 import org.example.blog._core.utils.DateUtil;
 
 public class RefundResponse {
+
     @Data
     public static class ListDTO {
         private Long id;
-        private Long paymentId;
+        private String paymentId;
         private Integer amount;
         private String reason;
         private String rejectReason;
-        private String statusDisplay; // 화면 표시용 (대기중, 승인, 거절)
+        private String statusDisplay;
 
-        // 상태별 플래그 변수 사용 (화면 표시용)
-        private boolean isPending; // 대기중
-        private boolean isApproved; // 승인 완료
-        private boolean isRejected; // 거절
+        private boolean isPending;
+        private boolean isApproved;
+        private boolean isRejected;
 
-        public ListDTO(RefundRequest refund) {
+        public ListDTO(Refund refund) {
             this.id = refund.getId();
-            this.paymentId = refund.getPayment().getId();
+            this.paymentId = refund.getPayment().getPaymentId();
             this.amount = refund.getPayment().getAmount();
             this.reason = refund.getReason();
             this.rejectReason = refund.getRejectReason() == null ? "" : refund.getRejectReason();
@@ -40,9 +41,7 @@ public class RefundResponse {
     public static class AdminListDTO {
         private Long id;
         private String username;
-        private Long paymentId;
-        private String impUid; // 포트원으로 환불 승인 요청할 때 필요
-        private String merchantUid;
+        private String paymentId;
         private Integer amount;
         private String requestedAt;
         private RefundStatus status;
@@ -50,23 +49,33 @@ public class RefundResponse {
         private String reason;
         private String rejectReason;
 
-        public AdminListDTO(RefundRequest refundRequest) {
-            this.id = refundRequest.getId();
-            this.username = refundRequest.getUser().getUsername();
-            this.paymentId = refundRequest.getPayment().getId();
-            this.merchantUid = refundRequest.getPayment().getPaymentId();
-            this.amount = refundRequest.getPayment().getAmount();
-            if(refundRequest.getCreatedAt() != null) {
-                this.requestedAt = DateUtil.format(refundRequest.getCreatedAt());
+        public AdminListDTO(Refund refund) {
+            this.id = refund.getId();
+            this.username = refund.getUser().getUsername();
+            this.paymentId = refund.getPayment().getPaymentId();
+            this.amount = refund.getPayment().getAmount();
+            if(refund.getCreatedAt() != null) {
+                this.requestedAt = DateUtil.format(refund.getCreatedAt());
             }
-            this.status = refundRequest.getStatus();
-            switch (refundRequest.getStatus()) {
+            this.status = refund.getStatus();
+            switch (refund.getStatus()) {
                 case PENDING -> this.statusDisplay = "대기중";
                 case APPROVED -> this.statusDisplay = "승인됨";
                 case REJECT -> this.statusDisplay = "거절됨";
             }
-            this.reason = refundRequest.getReason();
-            this.rejectReason = refundRequest.getRejectReason();
+            this.reason = refund.getReason();
+            this.rejectReason = refund.getRejectReason();
+        }
+    }
+
+    @Data
+    public static class PortOneDTO {
+        private Cancellation cancellation;
+
+        @Data
+        public static class Cancellation {
+            private String status;
+            private Integer totalAmount;
         }
     }
 }
