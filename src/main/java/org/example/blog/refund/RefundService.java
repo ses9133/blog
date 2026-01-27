@@ -7,7 +7,6 @@ import org.example.blog._core.errors.exception.Exception404;
 import org.example.blog._core.errors.exception.Exception500;
 import org.example.blog.payment.Payment;
 import org.example.blog.payment.PaymentRepository;
-import org.example.blog.payment.PaymentResponse;
 import org.example.blog.payment.PaymentStatus;
 import org.example.blog.user.User;
 import org.example.blog.user.UserRepository;
@@ -25,36 +24,31 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RefundService {
-    @Value("${portone.imp-key}")
-    private String impKey;
 
     @Value("${portone.imp-secret}")
     private String impSecret;
 
     private final PaymentRepository paymentRepository;
-    private final RefundRequestRepository refundRequestRepository;
+    private final RefundRepository refundRepository;
     private final UserRepository userRepository;
 
     // 0 단계: 환불 요청화면 진입시 검증
-    public Payment 환불요청폼화면검증(Long paymentId, Long userId) {
-        // 결제 내역 정보 확인해야함 ---> 누가 결제했는지 정보 있음
-        // userId == payment.getUser.getId() 확인해야함
+    public Payment refundRequestForm(Long paymentId, Long userId) {
 
-        // 1. 결제 내역 조회 (User 정보 함께)
         Payment payment = paymentRepository.findByIdWithUser(paymentId);
 
-        // 2. 본인 확인
+        // 본인 확인
         if(!payment.getUser().getId().equals(userId)) {
             throw new Exception403("본인 결제 내역만 환불 요청 가능합니다.");
         }
 
-        // 3. 결제 완료 상태 인지 확인("paid", "canceled" 가 있는데 paid 일 때만 폼 보여줄 수 있음)
-        if(!"paid".equals(payment.getPaymentStatus())) {
+        // 결제 완료 상태 인지 확인
+        if(!payment.isPaid()) {
             throw new Exception400("결제 완료된 상태만 환불 요청 가능합니다.");
         }
 
-        // 4. 이미 사용자가 환불 요청 한 상태인지 확인 (요청한 상태인데 또 요청 폼을 보여줄 수 없음)
-        if(refundRequestRepository.findByPaymentId(paymentId).isPresent()) {
+        // 이미 환불 요청 한 상태인지 확인
+        if(refundRepository.findByPaymentId(paymentId).isPresent()) {
             throw new Exception400("이미 환불 요청이 진행중입니다.");
         }
 
@@ -62,128 +56,112 @@ public class RefundService {
     }
 
     @Transactional
-    // 1 단계: 사용자가 환불 요청함
-    public void 환불요청(Long userId, RefundRequestDTO.RequestDTO reqDTO) {
-        // 화면 검증 로직 재사용
-        Payment payment = 환불요청폼화면검증(reqDTO.getPaymentId(), userId);
+    public void refundRequest(Long userId, RefundRequest.DTO reqDTO) {
+        Payment payment = refundRequestForm(reqDTO.getPaymentId(), userId);
 
-        // 사용자 조회 (세션으로 넘어온 id 가 실제 존재하는지 확인)
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception404("사용자를 찾을 수 없습니다."));
 
-        // 환불 요청 테이블에 이력 저장
-        RefundRequest refundRequest = RefundRequest.builder()
+        Refund refund = Refund.builder()
                 .user(user)
                 .payment(payment)
                 .reason(reqDTO.getReason())
                 .build();
-        refundRequestRepository.save(refundRequest);
+        refundRepository.save(refund);
     }
 
-    // 내 아이디로 조회(환불 요청 내역)
-    public List<RefundResponse.ListDTO> 환불요청목록조회(Long userId) {
-        List<RefundRequest> refundList = refundRequestRepository.findAllByUserId(userId);
+    public List<RefundResponse.ListDTO> refundList(Long userId) {
+        List<Refund> refundList = refundRepository.findAllByUserId(userId);
         return refundList.stream()
                 .map(RefundResponse.ListDTO::new)
                 .toList();
     }
 
-    public List<RefundResponse.AdminListDTO> 관리자환불요청목록조회() {
-        List<RefundRequest> refundRequestList = refundRequestRepository.findAllWithUserAndPayment();
-        return refundRequestList.stream()
+    public List<RefundResponse.AdminListDTO> getAllRefundsForAdmin() {
+        List<Refund> refundList = refundRepository.findAllWithUserAndPayment();
+        return refundList.stream()
                 .map(RefundResponse.AdminListDTO::new)
                 .toList();
     }
 
     @Transactional
-    public void 환불거절(Long refundRequestId, String rejectReason) {
-        RefundRequest refundRequest = refundRequestRepository.findById(refundRequestId)
+    public void rejectRefund(Long refundRequestId, String rejectReason) {
+        Refund refund = refundRepository.findById(refundRequestId)
                 .orElseThrow(() -> new Exception404("환불 요청을 찾을 수 없습니다."));
-        if(!refundRequest.isPending()) {
+        if(!refund.isPending()) {
             throw new Exception400( "대기 중인 환불 요청만 거절 할 수 있습니다.");
         }
-        refundRequest.reject(rejectReason);
+        refund.reject(rejectReason);
     }
 
     @Transactional
-    public void 환불승인(Long refundRequestId) {
-        // 1. 환불 요청 조회 ( + User / Payment 정보도 같이 들고 와야함)
-        RefundRequest refundRequest = refundRequestRepository.findByIdWithUserAndPayment(refundRequestId)
+    public void approveRefund(Long refundRequestId) {
+        Refund refund = refundRepository.findByIdWithUserAndPayment(refundRequestId)
                 .orElseThrow(() -> new Exception404("환불 요청을 찾을 수 없습니다."));
 
-        // 2. 환불 상태 확인
-        if(!refundRequest.isPending()) {
+        if(!refund.isPending()) {
             throw new Exception400("대기 중인 환불 요청만 승인할 수 있습니다.");
         }
 
-        // 3. 포인트 잔액 검증
-        Payment payment = refundRequest.getPayment();
-        User user = refundRequest.getUser();
+        Payment payment = refund.getPayment();
+        User user = refund.getUser();
         Integer refundAmount = payment.getAmount();
 
         if(user.getPoint() < refundAmount) {
-            // 이미 돈 사용한 상태
-            throw new Exception400("사용자의 포인트 잔액이 부족하여 환불 불가");
+            throw new Exception400("포인트를 이미 사용하여 환불이 불가능합니다.");
         }
 
-        // 포트원 액세스 토큰 발급 요청(포트원 인증 서버)
-        // 포트원 자원 서버에서 refund row update 요청(결제 취소)
-        포트원결제취소(payment.getPaymentId(), payment.getAmount());
+        cancelPortOnePayment(payment.getPaymentId());
 
-        refundRequest.setStatus(RefundStatus.APPROVED);
+        refund.setStatus(RefundStatus.APPROVED);
         payment.setPaymentStatus(PaymentStatus.CANCELLED);
-        // 내 포인트 잔액을 환불한 금액 만큼 차감해야함
+
         user.deductPoint(refundAmount);
     }
 
-    private void 포트원결제취소(String impUid, Integer amount) {
-        //1 . 액세스 토큰 발급
-//        String accessToken = 포트원액세스토큰발급();
-//        System.out.println("=== 취소용 accessToken: " + accessToken);
+    private void cancelPortOnePayment(String paymentId) {
+        Payment payment = paymentRepository.findByPaymentId(paymentId)
+                .orElseThrow(() -> new Exception404("결제 내역이 존재하지 않습니다."));
 
-        // 2. 요청 헤더 설정
+        Refund refund = refundRepository.findByPaymentId(payment.getId())
+                .orElseThrow(() -> new Exception404("환불 요청 내역이 존재하지 않습니다."));
+        String reason = refund.getReason();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(accessToken);
+        headers.set("Authorization", "PortOne " + impSecret);
 
-        // 3. 요청 바디 생성
         Map<String, Object> body = new HashMap<>();
-        body.put("reason", "관리자 환불 승인");
-        body.put("imp_uid", impUid);
-        body.put("amount", amount);
+        body.put("reason", reason);
 
-        // 4. HTTP 요청 메시지 만들기
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 
-        // 5. HTTP 클라이언트 객체 ---> RestTemplate 사용할 예정
         RestTemplate restTemplate = new RestTemplate();
 
-        // 응답 DTO 따로 안만들고 Map 형태로
         try {
-            ResponseEntity<Map> response = restTemplate.exchange(
-                    "https://api.iamport.kr/payments/cancel",
+            ResponseEntity<RefundResponse.PortOneDTO> response = restTemplate.exchange(
+                    "https://api.portone.io/payments/{paymentId}/cancel",
                     HttpMethod.POST,
-                    requestEntity,
-                    Map.class
+                    request,
+                    RefundResponse.PortOneDTO.class,
+                    paymentId
             );
-             System.out.println("포트원 결제 취소 응답 : " + response);
 
-             // 6. 응답 처리
-            Map<String, Object> responseBody = response.getBody();
-            System.out.println("포트원 결제 취소응답 DTO: ========== " + responseBody);
+            RefundResponse.PortOneDTO responseBody = response.getBody();
+
             if(responseBody == null) {
                 throw new Exception500("포트원 결제취소 응답이 비어있습니다.");
             }
-            /*
-            * 취소 시 유의할 점
-                REST API(POST https://api.iamport.kr/payments/cancel) 요청에 대한 응답 코드가 200이라도 응답 body의 code가 0이 아니면 환불에 실패했다는 의미입니다.
-                실패 사유는 body의 message를 통해 확인하셔야 합니다.
-            * */
-            Integer code = (Integer) responseBody.get("code");
-            if(code != 0) {
-                String message = (String) responseBody.get("message");
-                throw new Exception400("환불 실패: " + message);
+
+            RefundResponse.PortOneDTO.Cancellation cancellation = responseBody.getCancellation();
+            if(!payment.getAmount().equals(cancellation.getTotalAmount())) {
+                throw new Exception400("결제 금액과 환불 요청 금액이 불일치합니다.");
             }
+
+            if(!cancellation.getStatus().equals("SUCCEEDED")) {
+                throw new Exception500("환불에 실패했습니다.");
+            }
+
         } catch (Exception e) {
                 throw new Exception500("포트원 결제 취소중 오류 발생");
         }
