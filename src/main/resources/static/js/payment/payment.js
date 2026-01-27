@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $chargeBtn.addEventListener('click', async function () {
         try {
+            console.log("## 생성전 ###");
             // 1. 결제 번호 생성
             const res = await fetch("/api/v1/payment/prepare", {
                 method: 'POST',
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // 2. 결제 요청 (V2 방식)
             const response = await PortOne.requestPayment({
                 storeId: "store-d8111b19-87ed-4114-88b0-5372f91a9a40",
-                channelKey: 'channel-key-bf8b0eec-e270-4476-808b-5392d4ca19ce',
+                channelKey: "channel-key-7d4b97fb-b9c3-43d0-b63c-324a55d9e2bf",
                 paymentId: paymentId,
                 orderName: "포인트 충전",
                 totalAmount: Number(selectedAmount),
@@ -50,6 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // 3. 결제 결과 처리
             if (response.code != null) {
+                console.error("## 결제 실패 코드:", response.code);
+                console.error("## 결제 실패 메시지:", response.message);
                 return alert("결제 실패: " + response.message);
             }
 
