@@ -55,6 +55,10 @@ public class Payment {
         return this.getPaymentStatus() == PaymentStatus.PAID;
     }
 
+    public boolean isCancelled() {
+        return this.getPaymentStatus() == PaymentStatus.CANCELLED;
+    }
+
     public boolean isReady() {
         return this.getPaymentStatus() == PaymentStatus.READY;
     }
