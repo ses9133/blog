@@ -5,15 +5,30 @@ Spring Boot 기반의 통합 커뮤니티 플랫폼으로, **소셜 로그인, �
 
 ## 🛠 Tech Stack
 
-- **Backend**: Java 17, Spring Boot 3.4.12, Spring Data JPA
-- **Build Tool**: Maven
-- **Database**: MySQL / H2 (Development)
-- **Security & Auth**: 
-  - **OAuth 2.0**: Kakao & Naver Social Login
-  - **Email**: Google SMTP 기반 메일 인증 시스템
-  - **Encryption**: BCrypt Password Encoding
-- **API Integration**: PortOne V2 (결제/취소 API)
-- **Frontend**: Mustache, Bootstrap 5, Vanilla JS (AJAX)
+- ### Backend
+| Category | Technology |
+| :--- | :--- |
+| **Language** | <img src="https://img.shields.io/badge/Java%2017-007396?style=flat-square&logo=openjdk&logoColor=white"/> |
+| **Framework** | <img src="https://img.shields.io/badge/Spring%20Boot%203.4.12-6DB33F?style=flat-square&logo=springboot&logoColor=white"/> |
+| **ORM** | <img src="https://img.shields.io/badge/Spring%20Data%20JPA-6DB33F?style=flat-square&logo=spring&logoColor=white"/> |
+| **Build Tool** | <img src="https://img.shields.io/badge/Maven-C71A36?style=flat-square&logo=apachemaven&logoColor=white"/> |
+| **Security** | <img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white"/> |
+
+- ### Database & API
+| Category | Technology |
+| :--- | :--- |
+| **Production** | <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white"/> |
+| **Dev/Test** | <img src="https://img.shields.io/badge/H2%20Database-003366?style=flat-square&logo=databricks&logoColor=white"/> |
+| **Auth** | <img src="https://img.shields.io/badge/OAuth%202.0-3C3C3C?style=flat-square&logo=google&logoColor=white"/> |
+| **API** | <img src="https://img.shields.io/badge/PortOne%20V2-000000?style=flat-square&logo=target&logoColor=white"/> |
+| **Email** | <img src="https://img.shields.io/badge/Google%20SMTP-EA4335?style=flat-square&logo=gmail&logoColor=white"/>  |
+
+- ### Frontend
+| Category | Technology |
+| :--- | :--- |
+| **View** | <img src="https://img.shields.io/badge/Mustache-FF6100?style=flat-square&logo=mustache&logoColor=white"/> |
+| **UI** | <img src="https://img.shields.io/badge/Bootstrap%205-7952B3?style=flat-square&logo=bootstrap&logoColor=white"/> |
+| **Script** | <img src="https://img.shields.io/badge/Vanilla%20JS-F7DF1E?style=flat-square&logo=javascript&logoColor=black"/> |
 
 
 ## ✨ Key Features
