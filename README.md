@@ -48,17 +48,43 @@ Spring Boot 기반의 통합 커뮤니티 플랫폼으로, **소셜 로그인, �
 
 
 ## 📂 Project Structure
+도메인 중심의 계층형 아키텍처를 따릅니다.
 
 ```text
-src/main/java/org/example/blog
-├── _core       # 공통 예외 처리, 응답 DTO, 유틸리티(Mail, File)
-├── admin       # 관리자 전용 대시보드 및 환불 관리 로직
-├── board       # 게시글 관리 및 프리미엄 콘텐츠 서비스
-├── payment     # 결제 예약/검증 및 PortOne API 연동
-├── purchase    # 콘텐츠 구매 이력 및 권한 확인
-├── refund      # 환불 요청 및 관리자 승인/취소 라이프사이클
-├── reply       # 비동기 댓글 시스템
-└── user        # 로그인(Kakao, Naver), 이메일 인증, 포인트 관리
+📦 blog
+ ┣ 📂 .github
+ ┃ ┗ 📂 ISSUE_TEMPLATE  
+ ┣ 📂 src
+ ┃ ┣ 📂 main
+ ┃ ┃ ┣ 📂 java
+ ┃ ┃ ┃ ┗ 📂 org.example.blog
+ ┃ ┃ ┃   ┣ 📂 _core                 # 공통 기능 (설정, 예외, 인터셉터, 유틸)
+ ┃ ┃ ┃   ┃ ┣ 📂 config              # WebMvcConfig 등 시스템 설정
+ ┃ ┃ ┃   ┃ ┣ 📂 constants           # 세션 키 등 공통 상수
+ ┃ ┃ ┃   ┃ ┣ 📂 errors              # 전역 예외 처리 및 커스텀 Exception
+ ┃ ┃ ┃   ┃ ┣ 📂 interceptor         # 권한 및 세션 체크 인터셉터
+ ┃ ┃ ┃   ┃ ┣ 📂 response            # 공통 API 응답 규격 (ApiResponse)
+ ┃ ┃ ┃   ┃ ┗ 📂 utils               # 날짜, 파일, 메일 관련 유틸리티
+ ┃ ┃ ┃   ┣ 📂 admin                 # 관리자 대시보드 및 환불 관리
+ ┃ ┃ ┃   ┣ 📂 board                 # 게시판 (포스팅, 페이징, CRUD)
+ ┃ ┃ ┃   ┣ 📂 payment               # 결제 (포트원 API 연동 및 검증)
+ ┃ ┃ ┃   ┣ 📂 purchase              # 콘텐츠 구매 및 내역 관리
+ ┃ ┃ ┃   ┣ 📂 refund                # 환불 요청 및 상태 처리
+ ┃ ┃ ┃   ┣ 📂 reply                 # 댓글/답글 시스템
+ ┃ ┃ ┃   ┗ 📂 user                  # 사용자 관리 (Local/Social Login)
+ ┃ ┃ ┃     ┣ 📂 kakao               # 카카오 소셜 로그인 연동
+ ┃ ┃ ┃     ┣ 📂 mail                # 이메일 인증 서비스
+ ┃ ┃ ┃     ┗ 📂 naver               # 네이버 소셜 로그인 연동
+ ┃ ┃ ┗ 📂 resources
+ ┃ ┃ ┃ ┣ 📂 db                      # 초기 데이터 (data.sql)
+ ┃ ┃ ┃ ┣ 📂 static                  # 정적 리소스 (CSS, JS, Images)
+ ┃ ┃ ┃ ┣ 📂 templates               # Mustache 뷰 템플릿 (admin, board 등)
+ ┃ ┃ ┃ ┗ 📜 application*.yml        # 환경별 설정 (dev, local, prod)
+ ┃ ┗ 📂 test                        # 테스트 코드 (JUnit5)
+ ┣ 📜 .env                          # 환경 변수 (API 키 및 보안 설정)
+ ┣ 📜 pom.xml                       # Maven 의존성 관리 설정
+ ┗ 📜 README.md                     # 프로젝트 문서
+
 ```
 
 ## 📔 ERD
