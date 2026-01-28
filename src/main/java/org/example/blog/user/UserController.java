@@ -12,7 +12,6 @@ import org.example.blog.purchase.PurchaseService;
 import org.example.blog.user.kakao.KakaoService;
 import org.example.blog.user.naver.NaverService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +20,6 @@ import org.springframework.web.util.UriUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -92,7 +90,9 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<ApiResponse<UserResponse.DetailDTO>> updateProc(UserRequest.UpdateDTO updateDTO, HttpSession session) {
         User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
-        updateDTO.validate();
+        if(sessionUser.isLocal()) {
+            updateDTO.validate();
+        }
         User updatedUser = userService.updateProc(updateDTO, sessionUser.getId());
         session.setAttribute(SessionConstants.LOGIN_USER, updatedUser);
 
@@ -159,11 +159,10 @@ public class UserController {
         return "user/payment-list";
     }
 
-    // TODO - purchase 관련 리팩토링
     @GetMapping("/me/purchases")
     public String purchaseList(Model model, HttpSession session) {
         User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
-        List<PurchaseResponse.ListDTO> purchaseList = purchaseService.구매내역조회(sessionUser.getId());
+        List<PurchaseResponse.ListDTO> purchaseList = purchaseService.purchaseList(sessionUser.getId());
 
         model.addAttribute("purchaseList", purchaseList);
         return "user/purchase-list";

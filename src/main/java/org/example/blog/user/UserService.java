@@ -110,7 +110,7 @@ public class UserService {
                 String newProfileImageName = fileUtil.saveFile(updateDTO.getProfileImage());
                 updateDTO.setProfileImageFileName(newProfileImageName);
 
-                if(oldProfileImage != null && !oldProfileImage.isEmpty()) {
+                if(oldProfileImage != null && !oldProfileImage.isEmpty() && !oldProfileImage.startsWith("http")) {
                     fileUtil.deleteFile(oldProfileImage);
                 }
             } catch (IOException e) {
@@ -122,8 +122,13 @@ public class UserService {
 //        String hashPwd = passwordEncoder.encode(updateDTO.getPassword());
 //        updateDTO.setPassword(hashPwd);
         // TODO - 개발시에만
-        updateDTO.setPassword(updateDTO.getPassword());
-        userEntity.update(updateDTO);
+        if(userEntity.isLocal()) {
+            updateDTO.setPassword(updateDTO.getPassword());
+            userEntity.update(updateDTO);
+        } else {
+            userEntity.updateImage(updateDTO.getProfileImageFileName());
+        }
+
 
         return userEntity;
     }
