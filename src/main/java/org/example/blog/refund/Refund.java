@@ -30,7 +30,6 @@ public class Refund {
     @Column(length = 500)
     private String reason;
 
-    // 관리자 환불 거절 사유
     @Column(length = 500)
     private String rejectReason;
 
@@ -51,7 +50,6 @@ public class Refund {
         this.payment = payment;
         this.reason = reason;
     }
-
 
     public void approve() {
         this.status = RefundStatus.APPROVED;

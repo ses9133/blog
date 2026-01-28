@@ -32,7 +32,6 @@ public class RefundService {
     private final RefundRepository refundRepository;
     private final UserRepository userRepository;
 
-    // 0 단계: 환불 요청화면 진입시 검증
     public Payment refundRequestForm(Long paymentId, Long userId) {
 
         Payment payment = paymentRepository.findByIdWithUser(paymentId);
