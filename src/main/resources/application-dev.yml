@@ -36,7 +36,7 @@ spring:
 
   datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/myblog?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://localhost:3306/blog?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       username: root
       password: root
 
@@ -46,13 +46,13 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: never
       data-locations:
         - classpath:db/data.sql
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 #    show-sql: true
     properties:
       hibernate:
