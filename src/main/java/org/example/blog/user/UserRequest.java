@@ -29,16 +29,16 @@ public class UserRequest {
 
         public void validate() {
             if (username == null || username.trim().isEmpty()) {
-                throw new IllegalArgumentException("사용자명을 입력해주세요");
+                throw new Exception400("사용자명을 입력해주세요");
             }
             if (password == null || password.trim().isEmpty()) {
-                throw new IllegalArgumentException("비밀번호를 입력해주세요");
+                throw new Exception400("비밀번호를 입력해주세요");
             }
             if (email == null || email.trim().isEmpty()) {
-                throw new IllegalArgumentException("이메일을 입력해주세요");
+                throw new Exception400("이메일을 입력해주세요");
             }
             if (!email.contains("@")) {
-                throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
+                throw new Exception400("올바른 이메일 형식이 아닙니다.");
             }
         }
 
@@ -49,7 +49,7 @@ public class UserRequest {
                     .email(this.email)
                     .role(Role.USER)
                     .provider(OAuthProvider.LOCAL)
-                    .profileImage(profileImageFileName) // DB 에는 MultipartFile 형태가 아닌 문자열의 파일이름 저장
+                    .profileImage(profileImageFileName)
                     .build();
         }
     }
@@ -62,10 +62,10 @@ public class UserRequest {
 
         public void validate() {
             if (password == null || password.trim().isEmpty()) {
-                throw new IllegalArgumentException("비밀번호를 입력해주세요");
+                throw new Exception400("비밀번호를 입력해주세요");
             }
             if (password.length() < 4) {
-                throw new IllegalArgumentException("비밀번호는 4자리 이상이어야 합니다.");
+                throw new Exception400("비밀번호는 4자리 이상이어야 합니다.");
             }
         }
     }
