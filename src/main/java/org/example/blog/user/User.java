@@ -68,6 +68,10 @@ public class User {
         this.profileImage = updateDTO.getProfileImageFileName();
     }
 
+    public void updateImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public boolean isOwner(Long userId) {
         return this.id.equals(userId);
     }
@@ -87,7 +91,6 @@ public class User {
         if(this.profileImage.startsWith("http")) {
             return this.profileImage;
         }
-        // 아니면 로컬이미지(우리 서버에 저장된) 폴더 경로 붙여서 리턴
         return "/images/" + this.profileImage;
     }
 
