@@ -72,24 +72,22 @@ public class BoardResponse {
     @Data
     public static class PageDTO {
         private List<ListDTO> content;
-        private int number; // 현재 페이지 번호 (0)
-        private int size; // 한 페이지의 크기
-        private int totalPages; // 전체 페이지 수
-        private Long totalElements; // 전체 게시글 수
-        private boolean first; // 첫 페이지 여부
-        private boolean last; // 마지막 페이지 여부
-        private boolean hasNext; // 다음 페이지 존재 여부
-        private boolean hasPrevious; // 이전 페이지 존재 여부
+        private int number;
+        private int size;
+        private int totalPages;
+        private Long totalElements;
+        private boolean first;
+        private boolean last;
+        private boolean hasNext;
+        private boolean hasPrevious;
 
-        private Integer previousPageNumber; // 이전 페이지 번호 (없으면 null)
-        private Integer nextPageNumber; // 다음 페이지 번호 (없으면 null)
+        private Integer previousPageNumber;
+        private Integer nextPageNumber;
 
-        private List<PageLink> pageLinks; // 페이지 번호 링크 목록
+        private List<PageLink> pageLinks;
 
         public PageDTO(Page<Board> page) {
             page.getContent();
-            // page.getContent -> List<Board>
-            // 게시글 리스트 DTO --> BoardResponse.ListDTO
             this.content = page.getContent().stream()
                     .map(ListDTO::new)
                     .toList();
@@ -102,22 +100,17 @@ public class BoardResponse {
             this.hasNext = page.hasNext();
             this.hasPrevious = page.hasPrevious();
 
-            // 현재 페이지 인덱스 0부터 시작함
-            // 화면 -> N + 1
-            // 이전 페이지는 N
             this.previousPageNumber = page.hasPrevious() ? page.getNumber() : null;
             this.nextPageNumber = page.hasNext() ? page.getNumber() + 2 : null;
 
-            // pageLinks
             this.pageLinks = generatePageLinks(page);
         }
 
         private List<PageLink> generatePageLinks(Page<Board> page) {
             List<PageLink> links = new ArrayList<>();
-            int currentPage = page.getNumber() + 1; // page.getNumber() - 0부터 시작하기 때문
+            int currentPage = page.getNumber() + 1;
             int totalPages = page.getTotalPages();
 
-            // 3 4 [5] 6 7
             int startPage = Math.max(1, currentPage - 2);
             int endPage = Math.min(totalPages, currentPage + 2);
 
@@ -131,10 +124,9 @@ public class BoardResponse {
         }
     }
 
-    // 페이지 링크 클래스 설계
     @Data
     public static class PageLink {
-        private int displayNumber; // 표시할 페이지 번호
+        private int displayNumber;
         private boolean active;
     }
 }
