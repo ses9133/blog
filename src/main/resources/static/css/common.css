@@ -1,0 +1,65 @@
+html, body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Apple SD Gothic Neo',
+    'Noto Sans KR', 'Malgun Gothic', Arial, sans-serif;
+}
+
+.nav-row {
+    max-width: 600px;
+    display: flex;
+    margin: 0 auto;
+}
+
+.admin-container {
+    max-width: 850px;
+}
+
+.dashboard-container {
+    max-width: 600px;
+}
+
+.refund-reason-box {
+    background-color: rgb(245, 245, 245);
+}
+
+.reject-reason-box {
+    display: none;
+}
+
+.common-container {
+    max-width: 650px;
+}
+
+.premium-modal {
+    z-index: 1000;
+    border: 1px solid gray;
+    padding: 2rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.profile-image-box {
+    width: 150px;
+    height: 150px;
+    object-fit: cover
+}
+
+.code-hide {
+    display: none
+}
+
+.login-card {
+    border: none;
+}
+
+.login-header {
+    border-bottom: none;
+}
+
+.login-btn {
+    height: 40px;
+}
+
+.login-btn.naver {
+    width: 162.66px;
+}
