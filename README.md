@@ -61,6 +61,9 @@ src/main/java/org/example/blog
 └── user        # 로그인(Kakao, Naver), 이메일 인증, 포인트 관리
 ```
 
+## 📔 ERD
+<img width="650" height="500" alt="Gemini_Generated_Image_qm7h79qm7h79qm7h" src="https://github.com/user-attachments/assets/f7917597-29e1-405e-bbca-9d4c7034279a" />
+
 
 ## 🔗 URL Mapping 
 
