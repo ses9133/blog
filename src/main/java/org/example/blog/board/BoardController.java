@@ -101,13 +101,11 @@ public class BoardController {
         return ResponseEntity.ok(ApiResponse.ok("게시글이 삭제되었습니다."));
     }
 
-    // TODO - 결제 관련 리팩토링 (-)
-    @PostMapping("/board/{boardId}/purchase")
-    public String purchase(@PathVariable Long boardId, HttpSession session) {
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        purchaseService.구매하기(sessionUser.getId(), boardId);
-        return "redirect:/board/" + boardId;
-
+    @PostMapping("/boards/{boardId}/purchases")
+    public String purchaseBoard(@PathVariable Long boardId, HttpSession session) {
+        User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
+        purchaseService.purchaseBoard(sessionUser.getId(), boardId);
+        return "redirect:/boards/" + boardId;
     }
 
 }
