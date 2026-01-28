@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.blog.user.User;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,6 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Table(name = "board_tb")
 @Entity
+@Data
 public class Board {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,6 @@ public class Board {
     private String content;
 
     @Column(nullable = false)
-    @ColumnDefault("false")
     private Boolean premium = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
