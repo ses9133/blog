@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
     @Query("""
@@ -19,12 +18,9 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 """)
     List<Purchase> findAllByUserIdWithBoard(@Param("userId") Long userId);
 
-    // 사용자와 게시글의 구매 내역 조회
     @Query("SELECT p FROM Purchase p WHERE p.user.id = :userId AND p.board.id = :boardId")
     Optional<Purchase> findByUserIdAndBoardId(@Param("userId") Long userId, @Param("boardId") Long boardId);
 
-    // 사용자와 게시글의 구매 여부 확인
-    // default <- 자바 8이상 부터 지원해주는 키워드
     default boolean existsByUserIdAndBoardId(Long userId, Long boardId) {
         return findByUserIdAndBoardId(userId, boardId).isPresent();
     }
