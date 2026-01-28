@@ -1,10 +1,6 @@
 package org.example.blog.payment;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import org.example.blog._core.utils.DateUtil;
 
 public class PaymentResponse {
@@ -35,7 +31,7 @@ public class PaymentResponse {
     public static class PortOneV2Response {
         private String status;          // "PAID" (대문자)
         private String id;              // "B73219e32" (paymentId)
-        private String orderName;       // "포인트 충전"  TODO - 이름 바꿔야함
+        private String orderName;
         private Amount amount;
         private String paidAt;
 
@@ -43,7 +39,6 @@ public class PaymentResponse {
         public static class Amount {
             private Integer total;
         }
-
     }
 
     @Data
