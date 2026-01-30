@@ -118,11 +118,13 @@ Spring Boot 기반의 통합 커뮤니티 플랫폼으로, **소셜 로그인, �
 | 로그아웃 | GET | `/logout` | |
 | 이메일 인증 발송 | POST | `/api/v1/email/send` |  |
 | 이메일 인증 확인 | POST | `/api/v1/email/verify` |  |
-| 카카오 로그인 | GET | `/login/oauth2/code/kakao` | OAuth2 |
-| 네이버 로그인 | GET | `/login/oauth2/code/naver` | OAuth2 |
-| 마이페이지 | GET | `/me/update-form` | |
-| 프로필 수정 | POST | `/me/update` | 이미지 업로드 포함 |
-| 프로필 이미지 삭제 | POST | `/me/profile-image/delete` | |
+| 카카오 로그인 | GET | `/auth/kakao` | OAuth2 |
+| 카카오 로그인 콜백 | GET | `/auth/kakao/code` | OAuth2 |
+| 네이버 로그인 콜백 | GET | `/auth/naver/code` | OAuth2 |
+| 마이페이지 | GET | `/me` | |
+| 프로필 수정 폼| GET | `/me/edit` | 이미지 업로드 포함 |
+| 프로필 수정 처리| PUT | `/api/v1/me` | 이미지 업로드 포함 |
+| 프로필 이미지 삭제 | DELETE | `/me/profile-image` | |
 
 ### 💰 Payment & Purchase (결제 및 구매)
 | 기능 | Method | URL | 비고 |
@@ -174,10 +176,10 @@ DB_PASSWORD=your_password
 # OAuth Configuration
 KAKAO_CLIENT_ID=your_kakao_client_id
 KAKAO_CLIENT_SECRET=your_kakao_client_secret
-KAKAO_REDIRECT_URI=http://localhost:8080/user/kakao
+KAKAO_REDIRECT_URI=http://localhost:8080/auth/kakao
 NAVER_CLIENT_ID=your_naver_client_id
 NAVER_CLIENT_SECRET=your_naver_client_secret
-NAVER_REDIRECT_URI=http://localhost:8080/user/naver
+NAVER_REDIRECT_URI=http://localhost:8080/auth/naver
 
 # Social & PortOne API
 SOCIAL_KEY=your_random_social_key
