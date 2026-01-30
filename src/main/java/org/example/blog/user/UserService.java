@@ -59,17 +59,11 @@ public class UserService {
             throw new Exception400("사용자가 존재하지 않습니다.");
         }
 
-        // 비밀번호 검증 (BCrypt matches 메서드를 사용해서 비교하면 된다.)
-        // 일치하면 true, 불일치하면 false 반환
-//        if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-//            System.out.println("사용자명 또는 비밀번호가 올바르지 않습니다.");
-//            throw new Exception400("사용자명 또는 비밀번호가 올바르지 않습니다.");
-//        }
-        // TODO - 개발중에만
-        if(!loginDTO.getPassword().equals(user.getPassword()))  {
+        if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             System.out.println("사용자명 또는 비밀번호가 올바르지 않습니다.");
             throw new Exception400("사용자명 또는 비밀번호가 올바르지 않습니다.");
         }
+
         return user;
     }
 
@@ -117,9 +111,9 @@ public class UserService {
         } else {
             updateDTO.setProfileImageFileName(oldProfileImage);
         }
-//        String hashPwd = passwordEncoder.encode(updateDTO.getPassword());
-//        updateDTO.setPassword(hashPwd);
-        // TODO - 개발시에만
+        String hashPwd = passwordEncoder.encode(updateDTO.getPassword());
+        updateDTO.setPassword(hashPwd);
+
         if(userEntity.isLocal()) {
             updateDTO.setPassword(updateDTO.getPassword());
             userEntity.update(updateDTO);
