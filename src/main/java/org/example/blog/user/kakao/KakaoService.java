@@ -56,7 +56,7 @@ public class KakaoService {
         MultiValueMap<String, String> tokenParams = new LinkedMultiValueMap<>();
         tokenParams.add("grant_type", "authorization_code");
         tokenParams.add("client_id", clientId);
-        tokenParams.add("redirect_uri", "http://localhost:8080/user/kakao");
+        tokenParams.add("redirect_uri", "http://localhost:8080/auth/kakao/code");
         tokenParams.add("code", code);
         tokenParams.add("client_secret", clientSecret);
 
