@@ -27,14 +27,14 @@
                     <div id="msg" class="form-text"></div>
                 </div>
 
-                <input type="hidden" id="isEmailVerified" value="false">
+                <input type="hidden" id="isEmailVerified" name="isEmailVerified" value="false">
 
                 <div class="mb-3">
                     <label for="profileImage" class="form-label">프로필 사진(선택사항)</label>
                     <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*">
                     <small class="form-text text-muted mt-1">이미지 파일만 업로드 가능합니다(JPG, PNG, GIF)</small>
                 </div>
-                <button type="submit" class="btn btn-primary form-control">회원가입</button>
+                <button type="submit" class="btn btn-primary form-control" id="joinBtn">회원가입</button>
             </form>
         </div>
     </div>

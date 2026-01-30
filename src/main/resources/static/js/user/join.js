@@ -18,7 +18,8 @@ async function callSendApi() {
             alert("인증번호가 메일로 전송 되었습니다. 메일을 확인해주세요");
             document.querySelector("#code-box").style.display = "block";
         } else {
-            const error = response.json();
+            const error = await response.json();
+            console.log(error.message);
             alert("이메일 전송 실패\n" + error.message);
         }
     } catch (e) {
@@ -51,14 +52,22 @@ async function callVerifyApi() {
 
         if(response.ok) {
             $msgBox.innerHTML = "<span style='color: green' >인증되었습니다</span>"
-            document.querySelector("#isEmailVerified").value = true;
+            document.querySelector("#isEmailVerified").value = "true";
             document.querySelector("#email").readOnly = true;
         } else {
             $msgBox.innerHTML = "<span style='color: red' >인증번호가 틀렸습니다</span>"
-            document.querySelector("#isEmailVerified").value = false;
+            document.querySelector("#isEmailVerified").value = "false";
         }
     } catch (e) {
         console.log(e);
         alert("네트워크 오류 발생");
     }
 }
+
+document.querySelector("form").addEventListener("submit", (e) => {
+    const isVerifiedEmail = document.getElementById("isEmailVerified").value === "true";
+    if(!isVerifiedEmail) {
+        e.preventDefault();
+        alert("이메일 인증이 필요합니다.");
+    }
+});
