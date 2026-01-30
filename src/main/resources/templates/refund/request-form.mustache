@@ -14,7 +14,7 @@
                     <label class="form-label">결제 정보</label>
                     <div class="bg-light p-3 rounded-3">
                         <p class="mb-1"><strong>결제 번호</strong>: {{payment.paymentId}}</p>
-                        <p class="mb-1"><strong>결제 금액</strong>: {{payment.amount}} P</p>
+                        <p class="mb-1"><strong>결제 금액</strong>: <span id="amount">{{payment.amount}}</span> P</p>
                         <p class="mb-1"><strong>결제일</strong>: {{payment.paidAt}}</p>
                     </div>
                 </div>
@@ -33,3 +33,13 @@
     </div>
 </div>
 {{> layout/footer}}
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+       const $amount = document.getElementById("amount");
+       if($amount) {
+           const rawAmount = $amount.textContent.trim();
+           $amount.textContent = Number(rawAmount).toLocaleString();
+       }
+    });
+</script>
