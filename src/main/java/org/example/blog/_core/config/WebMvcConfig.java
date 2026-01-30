@@ -45,8 +45,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/login/**",
                         "/join",
-                        "/user/kakao",
-                        "/user/naver",
+                        "/auth/**",
                         "/boards",
                         "/",
                         "/boards/{id:\\d+}",
