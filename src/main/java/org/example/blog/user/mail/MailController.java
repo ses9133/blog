@@ -16,7 +16,7 @@ public class MailController {
     private final MailService mailService;
 
     @PostMapping("/send")
-    public ResponseEntity<ApiResponse<Void>> sendVerificationEmail(@RequestBody UserRequest.EmailCheckDTO reqDTO) {
+    public ResponseEntity<ApiResponse<Void>> sendVerificationEmail(@RequestBody UserRequest.EmailVerifyDTO reqDTO) {
         reqDTO.validate();
 
         mailService.sendVerificationEmail(reqDTO.getEmail());
@@ -27,10 +27,6 @@ public class MailController {
     @PostMapping("/verify")
     public ResponseEntity<ApiResponse<Void>> verifyEmailCode(@RequestBody UserRequest.EmailCheckDTO reqDTO) {
         reqDTO.validate();
-
-        if(reqDTO.getCode().isEmpty() || reqDTO.getCode().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(ApiResponse.fail("유효한 인증코드가 아닙니다."));
-        }
 
         boolean isVerified = mailService.verifyEmailCode(reqDTO.getEmail(), reqDTO.getCode());
 

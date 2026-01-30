@@ -25,6 +25,7 @@ public class UserRequest {
         private String username;
         private String password;
         private String email;
+        private Boolean isEmailVerified;
         private MultipartFile profileImage;
 
         public void validate() {
@@ -36,6 +37,9 @@ public class UserRequest {
             }
             if (email == null || email.trim().isEmpty()) {
                 throw new Exception400("이메일을 입력해주세요");
+            }
+            if(isEmailVerified == null || !isEmailVerified) {
+                throw new Exception400("인증된 이메일이 아닙니다.");
             }
             if (!email.contains("@")) {
                 throw new Exception400("올바른 이메일 형식이 아닙니다.");
@@ -71,16 +75,33 @@ public class UserRequest {
     }
 
     @Data
+    public static class EmailVerifyDTO {
+        private String email;
+
+        public void validate() {
+            if (email == null || email.trim().isEmpty()) {
+                throw new Exception400("이메일을 입력해주세요.");
+            }
+            if (!email.contains("@")) {
+                throw new Exception400("올바른 이메일 형식이 아닙니다.");
+            }
+        }
+    }
+
+    @Data
     public static class EmailCheckDTO {
         private String email;
         private String code;
 
         public void validate() {
             if (email == null || email.trim().isEmpty()) {
-                throw new Exception400("이메일을 입력해주세요");
+                throw new Exception400("이메일을 입력해주세요.");
             }
             if (!email.contains("@")) {
                 throw new Exception400("올바른 이메일 형식이 아닙니다.");
+            }
+            if(code == null || code.trim().isEmpty()) {
+                throw new Exception400("인증코드를 입력해주세요.");
             }
         }
     }

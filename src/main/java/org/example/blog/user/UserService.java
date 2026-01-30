@@ -43,12 +43,10 @@ public class UserService {
             }
         }
 
-//        String hashPwd = passwordEncoder.encode(joinDTO.getPassword());
+        String hashPwd = passwordEncoder.encode(joinDTO.getPassword());
 
         User user = joinDTO.toEntity(profileImageFileName);
-//        user.setPassword(hashPwd);
-        // TODO - 개발중에만
-        user.setPassword(joinDTO.getPassword());
+        user.setPassword(hashPwd);
         userRepository.save(user);
     }
 

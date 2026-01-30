@@ -109,7 +109,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.ok(new UserResponse.DetailDTO(updatedUser)));
     }
 
-    @GetMapping("/user/kakao")
+    @GetMapping("/auth/kakao/code")
     public String kakaoCallback(@RequestParam String code, HttpSession session) {
         try {
             User user = kakaoService.kakaoLogin(code);
@@ -120,7 +120,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login/naver")
+    @GetMapping("/auth/naver")
     public String naverLogin(HttpSession session) {
         String state = UUID.randomUUID().toString();
         session.setAttribute("NAVER_STATE", state);
@@ -130,7 +130,7 @@ public class UserController {
                 + "&redirect_uri=" + UriUtils.encode(naverRedirectUri, StandardCharsets.UTF_8);
     }
 
-    @GetMapping("/user/naver")
+    @GetMapping("/auth/naver/code")
     public String naverCallback(@RequestParam String code,
                                 @RequestParam String state,
                                 HttpSession session) {
