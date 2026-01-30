@@ -59,51 +59,99 @@
     </div>
 
     <div class="card mt-5">
-        {{#sessionUser}}
-            <div class="card-body">
-                <form action="/replies" method="post">
-                    <input type="hidden" name="boardId" value="{{board.id}}">
-                    <textarea class="form-control" rows="2" name="comment" placeholder="댓글을 입력하세요"></textarea>
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-outline-primary mt-1">댓글등록</button>
-                    </div>
-                </form>
-            </div>
-        {{/sessionUser}}
-        {{^sessionUser}}
-            <div class="card-body">
-                <p class="text-muted text-center p-2">댓글을 작성하려면 <a href="/login" class="text-primary">로그인</a>이 필요합니다.</p>
-            </div>
-        {{/sessionUser}}
-
-        <div class="card-footer">
-            <b>댓글 리스트</b>
-        </div>
-        <div class="list-group">
-            {{#replyList}}
-                <div class="list-group-item d-flex justify-content-between align-items-center">
-                    <div class="d-flex flex-column">
-                        <div class="d-flex align-items-center mb-1">
-                            <div class="badge bg-secondary text-white rounded">{{username}}</div>
-                            <small class="text-muted px-2">{{createdAt}}</small>
+        {{^board.premium}}
+            {{#sessionUser}}
+                <div class="card-body">
+                    <form action="/replies" method="post">
+                        <input type="hidden" name="boardId" value="{{board.id}}">
+                        <textarea class="form-control" rows="2" name="comment" placeholder="댓글을 입력하세요"></textarea>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-outline-primary mt-1">댓글등록</button>
                         </div>
-                        <div>{{comment}}</div>
+                    </form>
+                </div>
+                <div class="card-footer">
+                    <b>댓글 리스트</b>
+                </div>
+                {{#replyList}}
+                    <div class="list-group rounded-0 border-0">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center mb-1">
+                                    <div class="badge bg-secondary text-white rounded">{{username}}</div>
+                                    <small class="text-muted px-2">{{createdAt}}</small>
+                                </div>
+                                <div>{{comment}}</div>
+                            </div>
+
+                            {{#isOwner}}
+                                <button class="btn btn-danger btn-sm" id="replyDeleteBtn" data-reply-id="{{id}}">🗑 삭제</button>
+                            {{/isOwner}}
+                        </div>
                     </div>
+                {{/replyList}}
+            {{/sessionUser}}
 
-                    {{#isOwner}}
-                        <button class="btn btn-danger btn-sm" id="replyDeleteBtn" data-reply-id="{{id}}">🗑 삭제</button>
-                    {{/isOwner}}
+            {{^sessionUser}}
+                <div class="card-body">
+                    <p class="text-muted text-center p-2">댓글을 작성하려면 <a href="/login" class="text-primary">로그인</a>이 필요합니다.</p>
                 </div>
-            {{/replyList}}
+            {{/sessionUser}}
+        {{/board.premium}}
 
-            {{^replyList}}
-                <div class="list-group-item text-muted text-center py-3">
-                    작성된 댓글이 없습니다.
-                </div>
-            {{/replyList}}
-        </div>
+        {{#board.premium}}
+            {{#board.isPurchased}}
+                {{#sessionUser}}
+                    <div class="card-body">
+                        <form action="/replies" method="post">
+                            <input type="hidden" name="boardId" value="{{board.id}}">
+                            <textarea class="form-control" rows="2" name="comment" placeholder="댓글을 입력하세요"></textarea>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-outline-primary mt-1">댓글등록</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <b>댓글 리스트</b>
+                    </div>
+                    {{#replyList}}
+                    <div class="list-group rounded-0 border-0">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center mb-1">
+                                    <div class="badge bg-secondary text-white rounded">{{username}}</div>
+                                    <small class="text-muted px-2">{{createdAt}}</small>
+                                </div>
+                                <div>{{comment}}</div>
+                            </div>
+
+                            {{#isOwner}}
+                                <button class="btn btn-danger btn-sm" id="replyDeleteBtn" data-reply-id="{{id}}">🗑 삭제</button>
+                            {{/isOwner}}
+                        </div>
+                    </div>
+                    {{/replyList}}
+                {{/sessionUser}}
+
+                {{^sessionUser}}
+                    <div class="card-body">
+                        <p class="text-muted text-center p-2">댓글을 작성하려면 <a href="/login" class="text-primary">로그인</a>이 필요합니다.</p>
+                    </div>
+                {{/sessionUser}}
+            {{/board.isPurchased}}
+        {{/board.premium}}
+
+        {{^replyList}}
+            <div class="list-group-item text-muted text-center py-3">
+                작성된 댓글이 없습니다.
+            </div>
+        {{/replyList}}
+
     </div>
 </div>
+
+
+
 <div class="modal fade" id="myModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -128,5 +176,6 @@
         </div>
     </div>
 </div>
+
 <script src="/js/board/delete.js"></script>
 {{> layout/footer}}
