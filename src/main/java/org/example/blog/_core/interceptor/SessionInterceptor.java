@@ -14,7 +14,7 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if(modelAndView != null) {
-            HttpSession session = request.getSession(false); // 세션있으면 가져오고 없으면 null 반환
+            HttpSession session = request.getSession(false); 
 
             if(session != null) {
                 User sessionUser = (User) session.getAttribute(SessionConstants.LOGIN_USER);
