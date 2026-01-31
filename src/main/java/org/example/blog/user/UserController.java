@@ -1,5 +1,6 @@
 package org.example.blog.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.blog._core.constants.SessionConstants;
@@ -56,10 +57,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String loginProc(UserRequest.LoginDTO loginDTO, HttpSession session) {
+    public String loginProc(UserRequest.LoginDTO loginDTO, HttpServletRequest request) {
         loginDTO.validate();
         User sessionUser = userService.login(loginDTO);
-        session.setAttribute(SessionConstants.LOGIN_USER, sessionUser);
+
+        HttpSession session = request.getSession(false);
+        if(session != null) {
+            session.invalidate();
+        }
+        HttpSession newSession = request.getSession(true);
+        newSession.setAttribute(SessionConstants.LOGIN_USER, sessionUser);
+
         return "redirect:/";
     }
 
@@ -110,10 +118,11 @@ public class UserController {
     }
 
     @GetMapping("/auth/kakao/code")
-    public String kakaoCallback(@RequestParam String code, HttpSession session) {
+    public String kakaoCallback(@RequestParam String code, HttpServletRequest request) {
         try {
             User user = kakaoService.kakaoLogin(code);
-            session.setAttribute(SessionConstants.LOGIN_USER, user);
+            request.getSession().invalidate();
+            request.getSession(true).setAttribute(SessionConstants.LOGIN_USER, user);
             return "redirect:/";
         } catch (Exception e) {
             throw new Exception401("카카오 인증에 실패했습니다.");
@@ -133,14 +142,16 @@ public class UserController {
     @GetMapping("/auth/naver/code")
     public String naverCallback(@RequestParam String code,
                                 @RequestParam String state,
-                                HttpSession session) {
+                                HttpServletRequest request) {
+        HttpSession session = request.getSession();
         String savedState = (String) session.getAttribute("NAVER_STATE");
         if(!state.equals(savedState)) {
             throw new Exception401("잘못된 접근입니다. (state 불일치)");
         }
         User user = naverService.naverLogin(code, state);
-        session.setAttribute(SessionConstants.LOGIN_USER, user);
-        session.removeAttribute("NAVER_STATE");
+        session.invalidate();
+        HttpSession newSession = request.getSession(true);
+        newSession.setAttribute(SessionConstants.LOGIN_USER, user);
         return "redirect:/";
     }
 
