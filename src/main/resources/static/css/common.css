@@ -71,3 +71,7 @@ body {
 .login-btn.naver {
     width: 162.66px;
 }
+
+.nav-width {
+    min-width: 500px;
+}
