@@ -105,6 +105,24 @@ Spring Boot 기반의 통합 커뮤니티 플랫폼으로, **소셜 로그인, �
 ## 📔 ERD
 <img width="650" height="500" alt="Gemini_Generated_Image_qm7h79qm7h79qm7h" src="https://github.com/user-attachments/assets/f7917597-29e1-405e-bbca-9d4c7034279a" />
 
+## 🖥️ Main Pages
+
+| 로그인화면 | 회원가입 |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/2e7ca03d-bfee-453d-8d36-29942ba1dcab" alt="로그인화면"> | <img src="https://github.com/user-attachments/assets/9182ba24-3ce0-4c56-a24c-c2eefc8d88a7" alt="회원가입"> |
+
+| 마이페이지 | 포인트충전 |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/d9488993-12f4-4226-baa6-e7f6b45c8d85" alt="마이페이지"> | <img src="https://github.com/user-attachments/assets/1aac884a-4eec-40a4-bbf9-07a37053fec4" alt="포인트충전"> |
+
+| 유료게시글 구매 | 환불요청 |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/95156361-4cb3-4843-b95e-12ddfd0c0a5f" alt="포인트충전화면"> | <img src="https://github.com/user-attachments/assets/18857d2d-571e-4923-bcb3-7a8ec08ddb6e" alt="환불요청"> |
+
+| 관리자 환불요청내역 조회 | 관리자 환불승인/거절 |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/882fa82f-3207-4308-9dd9-9454cd01046a" alt="관리자 환불요청내역 조회"> | <img src="https://github.com/user-attachments/assets/938505b5-81b7-478e-94c6-a4ff89151fe0" alt="관리자환불승인"> |
+
 
 ## 🔗 URL Mapping 
 
