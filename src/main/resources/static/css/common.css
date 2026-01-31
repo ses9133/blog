@@ -9,6 +9,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 .nav-row {
@@ -19,10 +20,12 @@ body {
 
 .admin-container {
     max-width: 850px;
+    flex: 1 0 auto;
 }
 
 .dashboard-container {
     max-width: 600px;
+    flex: 1 0 auto;
 }
 
 .refund-reason-box {
@@ -35,7 +38,7 @@ body {
 
 .common-container {
     max-width: 550px;
-    flex: 1;
+    flex: 1 0 auto;
 }
 
 .premium-modal {
@@ -74,4 +77,12 @@ body {
 
 .nav-width {
     min-width: 500px;
+}
+
+.nav-mr-0 {
+    margin-right: 0;
+}
+
+.footer {
+    flex-shrink: 0;
 }
